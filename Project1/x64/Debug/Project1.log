@@ -1,0 +1,10 @@
+﻿  ソース.cpp
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp___glutInitWithExit が関数 glutInit_ATEXIT_HACK で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp_glutInitDisplayMode が関数 main で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp_glutInitWindowSize が関数 main で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp_glutMainLoop が関数 main で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp___glutCreateWindowWithExit が関数 glutCreateWindow_ATEXIT_HACK で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp_glutDisplayFunc が関数 main で参照されました
+ソース.obj : error LNK2019: 未解決の外部シンボル __imp_glutWireTeapot が関数 "void __cdecl display(void)" (?display@@YAXXZ) で参照されました
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.37.32822\lib\x64\glut32.lib : warning LNK4272: ライブラリのコンピューターの種類 'x86' がターゲットのコンピューターの種類' x64' と競合しています
+C:\Users\Administrator\Desktop\授業まとめ\プログラミング言語\Project1\x64\Debug\Project1.exe : fatal error LNK1120: 7 件の未解決の外部参照
