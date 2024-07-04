@@ -42,11 +42,11 @@ void SystemMain::draw() {
     backGround.draw();
 
     view3D();
-    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), player.getX(), player.getY() + 3, player.getZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
-    GLfloat lightPosition[4] = { 50.0, 100.0, 100.0, 10.0 }; //光源の位置
-    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };    //環境光
-    GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
-    GLfloat  light_specular[] = { 0.1f, 0.1f, 0.1f, 1.0f };     //鏡面光
+    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), player.getX(), player.getY() + 2, player.getZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
+    GLfloat lightPosition[4] = { 50.0, 100.0, 100.0, 1.0 }; //光源の位置
+    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.2f, 1.0f };    //環境光
+    GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.9f, 1.0f };      //拡散光
+    GLfloat  light_specular[] = { 0.8f, 0.8f, 0.8f, 1.0f };     //鏡面光
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
@@ -54,6 +54,19 @@ void SystemMain::draw() {
     plate.draw();
     fieldData.draw();
     player.draw();
+
+    view2D();                   // インタフェース
+    info.draw();
+
+    view3D();
+    glDisable(GL_DEPTH_TEST); // 隠面消去を無効
+    GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
+    GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
+    gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
+    player.drawHandle();
+    shiftLever.draw();
 
     glutSwapBuffers(); // バッファの切り替え
 
@@ -93,6 +106,7 @@ void SystemMain::view3D() {
 void SystemMain::update() {
     //各インスタンスのupdateを実行
     player.update();
+    shiftLever.update();
     //描画依頼
     glutPostRedisplay();
     //次タイマー登録

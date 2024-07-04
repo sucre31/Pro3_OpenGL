@@ -25,6 +25,10 @@ void Key::specialKey(int key, int x, int y)
 		//printf("(%3d,%3d)‚Å[¨]‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½\n", x, y);
 		keyRightON = true;
 		break;
+	case GLUT_KEY_F1:
+		//printf("z‚ª‰Ÿ‚³‚ê‚Ü‚µ‚½B");
+		keyZON = true;
+		break;
 	}
 }
 
@@ -50,6 +54,10 @@ void Key::specialKeyUp(int key, int x, int y)
 	case GLUT_KEY_RIGHT:
 		//printf("(%3d,%3d)‚Å[¨]‚ª—£‚³‚ê‚Ü‚µ‚½\n", x, y);
 		keyRightON = false;
+		break;
+	case GLUT_KEY_F1:
+		//printf("z‚ª—£‚³‚ê‚Ü‚µ‚½B");
+		keyZON = false;
 		break;
 	}
 }

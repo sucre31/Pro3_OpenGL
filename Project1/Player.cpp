@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "SystemMain.h"
 
-Player::Player() : x(0.0), y(0.0), z(-20.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+Player::Player() : x(0.0), y(0.0), z(-20.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
 
 }
 
@@ -24,7 +24,9 @@ void Player::draw() {
         glRotatef(angleY * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転
         glutSolidTeapot(1.0);            //自機はティーポット(笑)
     }glPopMatrix();
+}
 
+void Player::drawHandle() {
     glPushMatrix(); {       //ハンドル
         GLfloat mat0ambi[] = { 0.1,  0.1, 0.1, 1.0 };//黒皮
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
@@ -35,28 +37,33 @@ void Player::draw() {
         GLfloat mat0shine[] = { 27.89743616 };//黒皮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
         //ハンドルの描画
-        glTranslatef(x, y + 1, z); //位置変数をもとに移動
-        glRotatef(angleY * (180 / M_PI) + 90, 0.0, 1.0, 0.0);  //Y軸周りにangleY(ラジアン)回転
-        glRotatef(HandelRate * -handleAngle * (180 / M_PI), 0.0, 0.0, 1.0);  //Z軸周りにangleY(ラジアン)回転
-        glutSolidTorus(0.2, 0.7, 5, 20);            //ハンドルの外側
-        glutSolidTorus(0.2, 0.0, 5, 10);            //ハンドルの中心
         glPushMatrix(); {
-            glTranslatef(0.3 * cos(M_PI / 2), 0.3 * sin(M_PI / 2), 0.0); //ハンドルの中身1
-            glRotatef(90, 0.0, 0.0, 1.0);
-            glScalef(0.6, 0.2, 0.2);
-            glutSolidCube(0.8);
-        }glPopMatrix();
-        glPushMatrix(); {
-            glTranslatef(0.3 * cos(7 * M_PI / 6), 0.3 * sin(7 * M_PI / 6), 0.0); //ハンドルの中身2
-            glRotatef(210, 0.0, 0.0, 1.0);
-            glScalef(0.6, 0.2, 0.2);
-            glutSolidCube(0.8);
-        }glPopMatrix();
-        glPushMatrix(); {
-            glTranslatef(0.3 * cos(11 * M_PI / 6), 0.3 * sin(11 * M_PI / 6), 0.0); //ハンドルの中身2
-            glRotatef(330, 0.0, 0.0, 1.0);
-            glScalef(0.6, 0.2, 0.2);
-            glutSolidCube(0.8);
+            //glTranslatef(x - 5 * cos(angleY), y + 0.5, z + 5 * sin(angleY)); //位置変数をもとに移動
+            glTranslatef(0.0f, -2.1f, 0.0f);
+            glPushMatrix(); {
+                //glRotatef(angleY * (180 / M_PI) + 90, 0.0, 1.0, 0.0);  //Y軸周りにangleY(ラジアン)回転
+                glRotatef(HandelRate * -handleAngle * (180 / M_PI), 0.0, 0.0, 1.0);  //Z軸周りにangleY(ラジアン)回転
+                glutSolidTorus(0.1, 0.6, 5, 40);            //ハンドルの外側
+                glPushMatrix(); {
+                    glTranslatef(0.3 * cos(M_PI / 2), 0.3 * sin(M_PI / 2), 0.0); //ハンドルの中身1
+                    glRotatef(90, 0.0, 0.0, 1.0);
+                    glScalef(0.6, 0.2, 0.2);
+                    glutSolidCube(0.8);
+                }glPopMatrix();
+                glPushMatrix(); {
+                    glTranslatef(0.3 * cos(7 * M_PI / 6), 0.3 * sin(7 * M_PI / 6), 0.0); //ハンドルの中身2
+                    glRotatef(210, 0.0, 0.0, 1.0);
+                    glScalef(0.6, 0.2, 0.2);
+                    glutSolidCube(0.8);
+                }glPopMatrix();
+                glPushMatrix(); {
+                    glTranslatef(0.3 * cos(11 * M_PI / 6), 0.3 * sin(11 * M_PI / 6), 0.0); //ハンドルの中身2
+                    glRotatef(330, 0.0, 0.0, 1.0);
+                    glScalef(0.6, 0.2, 0.2);
+                    glutSolidCube(0.8);
+                }glPopMatrix();
+                glutSolidTorus(0.2, 0.0, 5, 10);            //ハンドルの中心
+            }glPopMatrix();
         }glPopMatrix();
     }glPopMatrix();
 }
@@ -79,29 +86,39 @@ void Player::update() {
     if (SystemMain::getIns()->key.getKeyUpON()) {
         speed += accel;
     }
-    if (SystemMain::getIns()->key.getKeyDownON()) {
-        speed -= accel;
+    if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
+        speed -= brake;
     }
     speed -= 0.004;       //何もしなくても速度は減る
-    if (speed > speedMax) {
+    if (speed > speedMax) { //って思ったらスピード制限
         speed = speedMax;
     }
     if (speed < 0) {
         speed = 0;
     }
-    if (speed > 0) {
-        angleY += speed * handleAngle;
-        x += speed * cos(angleY);
-        z += speed * -sin(angleY);
+    if (speed == 0) {       //速度が0のときだけシフト判定
+        if (SystemMain::getIns()->key.getKeyZON()) {
+            shift = 1;
+        }
+        else {
+            shift = 0;
+        }
     }
-    else if (speed < 0){
-        angleY -= speed * handleAngle;
-        x += abs(speed) * -cos(angleY);
-        z += abs(speed) * sin(angleY);
+    if (speed > 0) {
+        if (shift == 0) {
+            angleY += speed * handleAngle;
+            x += speed * cos(angleY);
+            z += speed * -sin(angleY);
+        } 
+        else if (shift == 1){
+            angleY -= speed * handleAngle;
+            x -= speed * cos(angleY);
+            z -= speed * -sin(angleY);
+        }
     }
 
     //カメラ位置の更新
-    SystemMain::getIns()->camera.setX(x - 15 * cos(angleY));
-    SystemMain::getIns()->camera.setY(y + 2.5);
-    SystemMain::getIns()->camera.setZ(z + 15 * sin(angleY));
+    SystemMain::getIns()->camera.setX(x - 18 * cos(angleY));
+    SystemMain::getIns()->camera.setY(y + 4.5);
+    SystemMain::getIns()->camera.setZ(z + 18 * sin(angleY));
 }

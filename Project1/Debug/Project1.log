@@ -1,2 +1,6 @@
-﻿  Player.cpp
+﻿  FieldData.cpp
+C:\Users\Administrator\Desktop\授業まとめ\プログラミング言語\Project1\Project1\FieldData.cpp(28,15): warning C4101: 'tmpY': ローカル変数は 1 度も使われていません。
+C:\Users\Administrator\Desktop\授業まとめ\プログラミング言語\Project1\Project1\FieldData.cpp(28,9): warning C4101: 'tmpX': ローカル変数は 1 度も使われていません。
+  main.cpp
+  コードを生成中...
   Project1.vcxproj -> C:\Users\Administrator\Desktop\授業まとめ\プログラミング言語\Project1\Debug\Project1.exe

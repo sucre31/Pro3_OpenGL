@@ -7,12 +7,15 @@ public:
 	virtual ~Player() = default;
 	void update();
 	void draw();
+	void drawHandle();
 	double getX() { return x; }
 	double getY() { return y; }
 	double getZ() { return z; }
 private:
 	const int HandelRate = 130;		//見かけ上のハンドルの回転速度
+	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	double accel;			// アクセル(加速度)
+	double brake;
 	double speed;			// 速さ
 	double speedMax;		// 最大速度
 	double handling;		// ハンドル回転スピード

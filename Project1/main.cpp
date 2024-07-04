@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
     glutInit(&argc, argv); // GLUT初期化
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowSize(Define::WIN_W, Define::WIN_H); // ウィンドウサイズの指定
-    glutCreateWindow("PUZZLE");   // 表示ウィンドウ作成
+    glutCreateWindow("drive");   // 表示ウィンドウ作成
     glutReshapeFunc(SystemMain::getIns()->reshape);         // Reshapeコールバック関数の指定
     glutDisplayFunc(SystemMain::getIns()->display);         // Displayコールバック関数の指定
     glutSpecialFunc(SystemMain::getIns()->specialKey);      // 特殊キーコールバック関数の指定(押したとき)

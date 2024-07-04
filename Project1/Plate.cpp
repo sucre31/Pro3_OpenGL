@@ -5,7 +5,7 @@ void Plate::draw() {
     glPushMatrix(); {
         GLfloat mat0ambi[] = { 0.329412,  0.329412, 0.329412, 1.0 };//
         GLfloat mat0diff[] = { 0.780392,  0.780392, 0.780392, 1.0 };//
-        GLfloat mat0spec[] = { 0.992157,  0.992157, 0.992157, 1.0 };//
+        GLfloat mat0spec[] = { 0.292157,  0.292157, 0.292157, 1.0 };//
         GLfloat mat0shine[] = { 27.89743616 };//^èJ“I‚È‚©‚ª‚â‚«
         glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
         glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è

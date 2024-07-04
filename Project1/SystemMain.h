@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Camera.h"
 #include "Plate.h"
+#include "InfoView.h"
+#include "ShiftLever.h"
 
 class SystemMain final : public Singleton<SystemMain>
 {
@@ -16,6 +18,8 @@ public:
 	Player player;
 	Camera camera;
 	Plate plate;
+	InfoView info;
+	ShiftLever shiftLever;
 	SystemMain() = default;
 	virtual ~SystemMain() = default;
 	void lightInit();
