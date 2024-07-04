@@ -8,7 +8,9 @@ public:
 	void setField(int x, int y, int value) { field[x][y] = value; }
 	int getField(int x, int y) { return field[x][y]; }
 private:
+	const double brank = 8.0;
 	int field[8][16];				// î’ñ èÓïÒ
-	float randValue[8][16][2];        //Ç†Ç∆Ç≈ÇØÇ∑
+	double randValue[8][16][2];        //Ç†Ç∆Ç≈ÇØÇ∑
+	double randValueVel[8][16][2];
 };
 

@@ -128,21 +128,27 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Define.cpp" />
     <ClCompile Include="FieldData.cpp" />
     <ClCompile Include="FieldManipulator.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Plate.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="SystemMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="FieldData.h" />
     <ClInclude Include="FieldManipulator.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Plate.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="SystemMain.h" />
   </ItemGroup>

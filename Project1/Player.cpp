@@ -1,0 +1,107 @@
+#include <complex>
+#include <glut.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include "Player.h"
+#include "SystemMain.h"
+
+Player::Player() : x(0.0), y(0.0), z(-20.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+
+}
+
+void Player::draw() {
+    glPushMatrix(); {
+        GLfloat mat0ambi[] = { 0.329412,  0.223529, 0.027451, 1.0 };//真鍮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+        GLfloat mat0diff[] = { 0.780392,  0.568627, 0.113725, 1.0 };//真鍮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+        GLfloat mat0spec[] = { 0.992157,  0.941176, 0.807843, 1.0 };//真鍮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+        GLfloat mat0shine[] = { 27.89743616 };//真鍮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+        //自機の描画
+        glTranslatef(x, y, z); //位置変数をもとに移動
+        glRotatef(angleY * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転
+        glutSolidTeapot(1.0);            //自機はティーポット(笑)
+    }glPopMatrix();
+
+    glPushMatrix(); {       //ハンドル
+        GLfloat mat0ambi[] = { 0.1,  0.1, 0.1, 1.0 };//黒皮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+        GLfloat mat0diff[] = { 0.1,  0.1, 0.1, 1.0 };//黒皮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+        GLfloat mat0spec[] = { 0.1,  0.1, 0.1, 1.0 };//黒皮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+        GLfloat mat0shine[] = { 27.89743616 };//黒皮
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+        //ハンドルの描画
+        glTranslatef(x, y + 1, z); //位置変数をもとに移動
+        glRotatef(angleY * (180 / M_PI) + 90, 0.0, 1.0, 0.0);  //Y軸周りにangleY(ラジアン)回転
+        glRotatef(HandelRate * -handleAngle * (180 / M_PI), 0.0, 0.0, 1.0);  //Z軸周りにangleY(ラジアン)回転
+        glutSolidTorus(0.2, 0.7, 5, 20);            //ハンドルの外側
+        glutSolidTorus(0.2, 0.0, 5, 10);            //ハンドルの中心
+        glPushMatrix(); {
+            glTranslatef(0.3 * cos(M_PI / 2), 0.3 * sin(M_PI / 2), 0.0); //ハンドルの中身1
+            glRotatef(90, 0.0, 0.0, 1.0);
+            glScalef(0.6, 0.2, 0.2);
+            glutSolidCube(0.8);
+        }glPopMatrix();
+        glPushMatrix(); {
+            glTranslatef(0.3 * cos(7 * M_PI / 6), 0.3 * sin(7 * M_PI / 6), 0.0); //ハンドルの中身2
+            glRotatef(210, 0.0, 0.0, 1.0);
+            glScalef(0.6, 0.2, 0.2);
+            glutSolidCube(0.8);
+        }glPopMatrix();
+        glPushMatrix(); {
+            glTranslatef(0.3 * cos(11 * M_PI / 6), 0.3 * sin(11 * M_PI / 6), 0.0); //ハンドルの中身2
+            glRotatef(330, 0.0, 0.0, 1.0);
+            glScalef(0.6, 0.2, 0.2);
+            glutSolidCube(0.8);
+        }glPopMatrix();
+    }glPopMatrix();
+}
+
+void Player::update() {
+    //ハンドル回転
+    if (SystemMain::getIns()->key.getKeyLeftON()) {
+        handleAngle += handling;
+    }
+    if (SystemMain::getIns()->key.getKeyRightON()) {
+        handleAngle -= handling;
+    }
+    if (handleAngle > handleAngleMax) {
+        handleAngle = handleAngleMax;
+    }
+    if (handleAngle < -handleAngleMax) {
+        handleAngle = -handleAngleMax;
+    }
+    //アクセル
+    if (SystemMain::getIns()->key.getKeyUpON()) {
+        speed += accel;
+    }
+    if (SystemMain::getIns()->key.getKeyDownON()) {
+        speed -= accel;
+    }
+    speed -= 0.004;       //何もしなくても速度は減る
+    if (speed > speedMax) {
+        speed = speedMax;
+    }
+    if (speed < 0) {
+        speed = 0;
+    }
+    if (speed > 0) {
+        angleY += speed * handleAngle;
+        x += speed * cos(angleY);
+        z += speed * -sin(angleY);
+    }
+    else if (speed < 0){
+        angleY -= speed * handleAngle;
+        x += abs(speed) * -cos(angleY);
+        z += abs(speed) * sin(angleY);
+    }
+
+    //カメラ位置の更新
+    SystemMain::getIns()->camera.setX(x - 15 * cos(angleY));
+    SystemMain::getIns()->camera.setY(y + 2.5);
+    SystemMain::getIns()->camera.setZ(z + 15 * sin(angleY));
+}

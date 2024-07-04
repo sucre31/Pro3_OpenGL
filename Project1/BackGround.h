@@ -7,10 +7,10 @@ public:
 	void draw();
 	void drawSquare(int x, int y);
 private:
-	const int squareSize = 20;
-	const int fieldX1 = 215;
-	const int fieldX2 = 425;
-	const int fieldY1 = 43;
-	const int fieldY2 = 463;
+	const int squareSize = 40;
+	const int fieldX1 = 215 * 2;
+	const int fieldX2 = 425 * 2;
+	const int fieldY1 = 43 * 2;
+	const int fieldY2 = 463 * 2;
 };
 
