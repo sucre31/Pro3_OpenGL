@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ShiftLever.h"
+
 class Player
 {
 public:
@@ -7,12 +9,16 @@ public:
 	virtual ~Player() = default;
 	void update();
 	void draw();
-	void drawHandle();
+	void drawInfo();	// インタフェース側の処理をまとめる
 	double getX() { return x; }
 	double getY() { return y; }
 	double getZ() { return z; }
+	void setX(double xIn) { x = xIn; }
+	void setY(double yIn) { y = yIn; }
+	void setZ(double zIn) { z = zIn; }
 private:
-	const int HandelRate = 130;		//見かけ上のハンドルの回転速度
+	ShiftLever shiftLever;
+	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
 	double accel;			// アクセル(加速度)
@@ -25,5 +31,9 @@ private:
 	double angleY;			// Y軸の回転量(ラジアン)
 	double handleAngle;		// ハンドルの回転量
 	double handleAngleMax;	// ハンドルの最大回転角
+	void drawHandle();
+	void drawAccel();
+	void drawBrake();
+	void drawSpeed();
 };
 

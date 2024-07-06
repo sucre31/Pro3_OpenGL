@@ -11,6 +11,7 @@ public:
 	int getFieldX(double x);
 	int getFieldZ(double z);
 	int checkFieldValue(int i, int j) { return field.getField(i, j); }
+	double getFieldGridSize() const { return FieldGridSize; }
 private:
 	const double FieldGridSize = 4.0;	//1ƒOƒŠƒbƒh‚ ‚½‚è‚Ì‘å‚«‚³
 	Plate plate;

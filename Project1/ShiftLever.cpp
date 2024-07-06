@@ -3,6 +3,14 @@
 #include "SystemMain.h"
 
 void ShiftLever::draw() {
+	GLfloat mat0ambi[] = { 0.1,  0.1, 0.1, 1.0 };//•”ç
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
+	GLfloat mat0diff[] = { 0.1,  0.1, 0.1, 1.0 };//•”ç
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è
+	GLfloat mat0spec[] = { 0.1,  0.1, 0.1, 1.0 };//•”ç
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //‹¾–ÊŒõ‚Ì”½Ë—¦‚ğİ’è
+	GLfloat mat0shine[] = { 27.89743616 };//•”ç
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 	glPushMatrix(); {
 		glRotatef(15 + shiftAngle, 1.0, 0.0, 0.0);
 		glTranslatef(0.0f, 0.0f, -2.0f);

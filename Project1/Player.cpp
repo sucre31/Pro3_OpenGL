@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "SystemMain.h"
 
-Player::Player() : x(-2.0), y(0.0), z(-2.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
 
 }
 
@@ -24,6 +24,14 @@ void Player::draw() {
         glRotatef(angleY * (180 / M_PI) + 1.5 * handleAngle * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転 handleAngleも考慮
         glutSolidTeapot(1.0);            //自機はティーポット(笑)
     }glPopMatrix();
+}
+
+void Player::drawInfo() {
+    shiftLever.draw();
+    drawHandle();
+    drawAccel();
+    drawBrake();
+    drawSpeed();
 }
 
 void Player::drawHandle() {
@@ -68,6 +76,79 @@ void Player::drawHandle() {
     }glPopMatrix();
 }
 
+void Player::drawAccel() {
+    const double angle = 30;
+    glPushMatrix(); {       //ハンドル
+        GLfloat mat0ambi[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
+        GLfloat mat0diff[] = { 0.50754,  0.50754, 0.50754, 1.0 };
+        GLfloat mat0spec[] = { 0.508273,  0.508273, 0.508273, 1.0 };
+        GLfloat mat0shine[] = { 51.2 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+
+        // 描画
+        glPushMatrix(); {
+            glTranslatef(-1.0, -2.6f, 0.0);
+            glRotatef(speed * (angle / speedMax) + 50, 1.0, 0.0, 0.0);
+            glScalef(0.3, 0.8, 0.1);
+            glPushMatrix(); {
+                glutSolidCube(1.0);
+            }glPopMatrix();
+        }glPopMatrix();
+    }glPopMatrix();
+}
+
+void Player::drawBrake() {
+    const double angle = 30;
+    glPushMatrix(); {       //ブレーキ
+        GLfloat mat0ambi[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
+        GLfloat mat0diff[] = { 0.50754,  0.50754, 0.50754, 1.0 };
+        GLfloat mat0spec[] = { 0.508273,  0.508273, 0.508273, 1.0 };
+        GLfloat mat0shine[] = { 51.2 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+
+        // 描画
+        glPushMatrix(); {
+            glTranslatef(1.0, -2.6f, 0.0);
+            glRotatef(speed * (angle / speedMax) + 50, 1.0, 0.0, 0.0);
+            glScalef(0.3, 0.4, 0.1);
+            glPushMatrix(); {
+                glutSolidCube(1.0);
+            }glPopMatrix();
+        }glPopMatrix();
+    }glPopMatrix();
+}
+
+void Player::drawSpeed() {
+    glPushMatrix(); {       //スピードメーター
+        GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
+        GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
+        GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
+        GLfloat mat0shine[] = { 51.2 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+
+        // 描画
+        glTranslatef(0.3 * -cos(( 90 * (speed / speedMax) - 135) * (M_PI / 180)), 0.3 * -sin((90 * (speed / speedMax) - 135) * (M_PI / 180)), 0.0);
+        glPushMatrix(); {
+            glTranslatef(-2.0, -2.5f, 0.0);
+            glRotatef((speed / speedMax) * 90 - 45, 0.0, 0.0, 1.0);
+            glScalef(0.01, 0.5, 0.01);
+            glPushMatrix(); {
+                glutSolidCube(1.0);
+            }glPopMatrix();
+        }glPopMatrix();
+    }glPopMatrix();
+}
+
+
 void Player::update() {
     //ハンドル回転
     if (SystemMain::getIns()->key.getKeyLeftON()) {
@@ -77,7 +158,7 @@ void Player::update() {
         handleAngle -= handling;
     }
     else {              // ハンドル持ってない (左右同時押しこれでいいかは検討)
-        handleAngle -= (4.0 * handleAngle) * M_PI / 360;
+        handleAngle -= (5.0 * handleAngle) * M_PI / 360;
     }
     if (handleAngle > handleAngleMax) {
         handleAngle = handleAngleMax;
@@ -93,7 +174,7 @@ void Player::update() {
         speed -= brake;
     } 
     else {
-        //speed += 0.001;             //クリーピング現象
+        //speed += 0.001;             //クリープ現象
     }
     speed -= 0.004;       //何もしなくても速度は減る
     if (speed > speedMax) { //って思ったらスピード制限
@@ -152,4 +233,7 @@ void Player::update() {
     SystemMain::getIns()->camera.setX(x - 18 * cos(angleY));
     SystemMain::getIns()->camera.setY(y + 4.5);
     SystemMain::getIns()->camera.setZ(z + 18 * sin(angleY));
+
+    //シフトレバーの更新
+    shiftLever.update();
 }

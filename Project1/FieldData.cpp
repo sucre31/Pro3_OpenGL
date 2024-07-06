@@ -79,6 +79,13 @@ void FieldData::draw() {
     static const GLfloat yellow[] = { 1.0f, 1.0f, 0.0f, 1.0f };
     static const GLfloat blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
     /*それぞれの盤面の状態を受け取り描画*/
+    GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
+    GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
+    GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
+    GLfloat mat0shine[] = { 51.2 };
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
     for (i = 0; i < fieldSizeX; i++) {
         for (j = 0; j < fieldSizeZ; j++) {
             switch (field[i][j]) {
@@ -104,23 +111,20 @@ void FieldData::draw() {
             // 球
             if (valid) {
                 glPushMatrix(); {
-                    //図形の色 (赤)
-                    static const GLfloat red[] = { 0.8, 0.2, 0.2, 1.0 };
+                    //glEnable(GL_TEXTURE_2D);        //テキスチャマッピング開始
 
-                    glEnable(GL_TEXTURE_2D);        //テキスチャマッピング開始
-
-                    /* テクスチャ座標の自動生成を有効にする */
-                    glEnable(GL_TEXTURE_GEN_S);
-                    glEnable(GL_TEXTURE_GEN_T);
+                    ///* テクスチャ座標の自動生成を有効にする */
+                    //glEnable(GL_TEXTURE_GEN_S);
+                    //glEnable(GL_TEXTURE_GEN_T);
 
                     glTranslatef((i * GridSize + randValue[i][j][0]), 0, (j * GridSize + randValue[i][j][1]));
                     glutSolidSphere(0.90, 15, 15);              // 球
 
-                    /* テクスチャ座標の自動生成を無効にする */
-                    glDisable(GL_TEXTURE_GEN_S);
-                    glDisable(GL_TEXTURE_GEN_T);
+                    ///* テクスチャ座標の自動生成を無効にする */
+                    //glDisable(GL_TEXTURE_GEN_S);
+                    //glDisable(GL_TEXTURE_GEN_T);
 
-                    glDisable(GL_TEXTURE_2D);
+                    //glDisable(GL_TEXTURE_2D);
                 }glPopMatrix();
             }
             // 床

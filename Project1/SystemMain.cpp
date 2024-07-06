@@ -2,6 +2,9 @@
 #include "SystemMain.h"
 #include "Define.h"
 
+SystemMain::SystemMain() {
+}
+
 void SystemMain::lightInit(void) {
     glEnable(GL_LIGHTING);  //光源の設定を有効にする
     glEnable(GL_LIGHT0);    //0番目の光源を有効にする(8個まで設定可能)
@@ -62,37 +65,43 @@ void SystemMain::specialKeyUp(int key, int x, int y)             // 指定時間後に
 }
 
 void SystemMain::draw() {
-    glClearColor(0.1, 0.1, 0.1, 1.0); // 画面クリア
+    glClearColor(0.0, 0.0, 0.0, 1.0); // 画面クリア
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     view2D();                   // 順番に注意 背景用
-    backGround.draw();
+    //backGround.draw();
 
     view3D();
     gluLookAt(camera.getX(), camera.getY(),camera.getZ(), player.getX(), player.getY() + 2, player.getZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
-    GLfloat lightPosition[4] = { 50.0, 100.0, 100.0, 1.0 }; //光源の位置
-    GLfloat light_ambient[] = { 0.2f, 0.1f, 0.1f, 1.0f };    //環境光
-    GLfloat  light_diffuse[] = { 0.4f, 0.1f, 0.1f, 1.0f };      //拡散光
-    GLfloat  light_specular[] = { 0.8f, 0.8f, 0.8f, 1.0f };     //鏡面光
+    GLfloat lightPosition[4] = { 0.0, 5.0, -10.0, 1.0 }; //光源の位置
+    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };    //環境光
+    GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
+    GLfloat  light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };     //鏡面光
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    field.draw();
-    player.draw();
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.001);   //光の減衰
+    glPushMatrix(); {
+        field.draw();
+        player.draw();
+    }glPopMatrix();
 
     view2D();                   // インタフェース
     info.draw();
 
     view3D();
-    glDisable(GL_DEPTH_TEST); // 隠面消去を無効
+    //glDisable(GL_DEPTH_TEST); // 隠面消去を無効
+    GLfloat lightPosition2[4] = { 50.0, 100.0, 100.0, 0.0 }; //光源の位置
     GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
     GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition2);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
-    gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0); 
-    player.drawHandle();
-    shiftLever.draw();
+    gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+    glPushMatrix(); {
+        player.drawInfo();
+    }glPopMatrix();
 
     glutSwapBuffers(); // バッファの切り替え
 
@@ -103,7 +112,6 @@ void SystemMain::update() {
     //各インスタンスのupdateを実行
     player.update();
     field.update();
-    shiftLever.update();
     //描画依頼
     glutPostRedisplay();
     //次タイマー登録

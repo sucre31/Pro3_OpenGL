@@ -18,8 +18,7 @@ public:
 	Player player;
 	Camera camera;
 	InfoView info;
-	ShiftLever shiftLever;
-	SystemMain() = default;
+	SystemMain();
 	virtual ~SystemMain() = default;
 	void lightInit();
 	void textureInit();
