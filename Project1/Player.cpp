@@ -5,7 +5,7 @@
 #include "Player.h"
 #include "SystemMain.h"
 
-Player::Player() : x(0.0), y(0.0), z(-20.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+Player::Player() : x(-2.0), y(0.0), z(-2.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
 
 }
 
@@ -21,7 +21,7 @@ void Player::draw() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
         //自機の描画
         glTranslatef(x, y, z); //位置変数をもとに移動
-        glRotatef(angleY * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転
+        glRotatef(angleY * (180 / M_PI) + 1.5 * handleAngle * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転 handleAngleも考慮
         glutSolidTeapot(1.0);            //自機はティーポット(笑)
     }glPopMatrix();
 }
@@ -73,8 +73,11 @@ void Player::update() {
     if (SystemMain::getIns()->key.getKeyLeftON()) {
         handleAngle += handling;
     }
-    if (SystemMain::getIns()->key.getKeyRightON()) {
+    else if (SystemMain::getIns()->key.getKeyRightON()) {
         handleAngle -= handling;
+    }
+    else {              // ハンドル持ってない (左右同時押しこれでいいかは検討)
+        handleAngle -= (4.0 * handleAngle) * M_PI / 360;
     }
     if (handleAngle > handleAngleMax) {
         handleAngle = handleAngleMax;
@@ -88,6 +91,9 @@ void Player::update() {
     }
     if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
         speed -= brake;
+    } 
+    else {
+        //speed += 0.001;             //クリーピング現象
     }
     speed -= 0.004;       //何もしなくても速度は減る
     if (speed > speedMax) { //って思ったらスピード制限
@@ -116,6 +122,31 @@ void Player::update() {
             z -= speed * -sin(angleY);
         }
     }
+    y += velY;      //y方向の速度を元に更新
+
+    if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
+        velY -= 0.1;
+    }
+    else {
+        if (y < -0.5 || y > 0) {
+            velY -= 0.1;
+        }
+        else {
+            y = 0;
+            velY = 0;
+        }
+    }
+    if (y < -100) {
+        x = 0;
+        z = 0;
+        y = 5;
+        velY = 0;
+        angleY = -M_PI / 2;
+    }
+
+    //グリッド座標を更新
+    FieldX = SystemMain::getIns()->field.getFieldX(x);
+    FieldZ = SystemMain::getIns()->field.getFieldZ(z);
 
     //カメラ位置の更新
     SystemMain::getIns()->camera.setX(x - 18 * cos(angleY));

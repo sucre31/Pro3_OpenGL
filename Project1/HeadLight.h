@@ -1,0 +1,10 @@
+#pragma once
+class HeadLight
+{
+public:
+
+private:
+	int lightNumber;		// ‰½”Ô–Ú‚Ìƒ‰ƒCƒg‚ðŽg‚¤‚©
+	double x, y, z;
+};
+

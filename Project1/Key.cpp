@@ -2,6 +2,24 @@
 #include <glut.h>
 #include "Key.h"
 
+void Key::keyboard(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case 'z':
+		keyZON = true;
+		break;
+	}
+}
+
+void Key::keyboardUp(unsigned char key, int x, int y)
+{
+	switch (key) {
+	case 'z':
+		keyZON = false;
+		break;
+	}
+}
+
 void Key::specialKey(int key, int x, int y)
 {
 	//キー入力は構造体に一時保存しておく
@@ -24,10 +42,6 @@ void Key::specialKey(int key, int x, int y)
 	case GLUT_KEY_RIGHT:
 		//printf("(%3d,%3d)で[→]が押されました\n", x, y);
 		keyRightON = true;
-		break;
-	case GLUT_KEY_F1:
-		//printf("zが押されました。");
-		keyZON = true;
 		break;
 	}
 }
@@ -54,10 +68,6 @@ void Key::specialKeyUp(int key, int x, int y)
 	case GLUT_KEY_RIGHT:
 		//printf("(%3d,%3d)で[→]が離されました\n", x, y);
 		keyRightON = false;
-		break;
-	case GLUT_KEY_F1:
-		//printf("zが離されました。");
-		keyZON = false;
 		break;
 	}
 }

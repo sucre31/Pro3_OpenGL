@@ -132,6 +132,7 @@
     <ClCompile Include="Define.cpp" />
     <ClCompile Include="FieldData.cpp" />
     <ClCompile Include="FieldManipulator.cpp" />
+    <ClCompile Include="HeadLight.cpp" />
     <ClCompile Include="InfoView.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="Define.h" />
     <ClInclude Include="FieldData.h" />
     <ClInclude Include="FieldManipulator.h" />
+    <ClInclude Include="HeadLight.h" />
     <ClInclude Include="InfoView.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="main.h" />

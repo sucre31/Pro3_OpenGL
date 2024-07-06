@@ -20,13 +20,13 @@ void ShiftLever::draw() {
 
 void ShiftLever::update() {
 	if (SystemMain::getIns()->key.getKeyZON()) {
-		shiftAngle -= 0.5;
+		shiftAngle -= 0.9;
 		if (shiftAngle < -10.0) {
 			shiftAngle = -10.0;
 		}
 	}
 	else {
-		shiftAngle += 0.5;
+		shiftAngle += 0.9;
 		if (shiftAngle > 2.0) {
 			shiftAngle = 2.0;
 		}
