@@ -6,16 +6,19 @@
 
 FieldData::FieldData() {
 	int i, j;
-    bool valid = false;     // 配置するか?
+    bool valid = true;     // 配置するか?
     srand((unsigned int)time(NULL));        // 盤面にデータを設置
 	for (i = 0; i < fieldSizeX; i++) {               // 盤面の初期化
         valid = !valid;
 		for (j = 0; j < fieldSizeZ; j++) {
-            if (valid) {
+            if (i == 0 || j == 0  || i == fieldSizeX - 1 || j == fieldSizeZ - 1) {
+                field[i][j] = 0;
+            }
+            else if (valid) {
                 field[i][j] = (rand() % 3) + 1;
             }
             else {
-                if ((j == fieldSizeZ - 1 && (i / 2) % 2 == 0) || (j == 0 && (i / 2) % 2 == 1)) {
+                if ((j == fieldSizeZ - 2 && ((i - 1) / 2) % 2 == 0) || (j == 1 && ((i - 1) / 2) % 2 == 1)) {
                     field[i][j] = (rand() % 3) + 1;
                 }
                 else {
@@ -30,7 +33,7 @@ FieldData::FieldData() {
             randValueVel[i][j][1] = 0;
 		}
 	}
-    field[0][0] = 1;
+    field[1][1] = 1;
 }
 
 void FieldData::update() {
@@ -112,28 +115,22 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // 球
             if (valid) {
-                glPushMatrix(); {
-                    //glEnable(GL_TEXTURE_2D);        //テキスチャマッピング開始
-
-                    ///* テクスチャ座標の自動生成を有効にする */
-                    //glEnable(GL_TEXTURE_GEN_S);
-                    //glEnable(GL_TEXTURE_GEN_T);
-
-                    glTranslatef((i * GridSize + randValue[i][j][0]), 0, (j * GridSize + randValue[i][j][1]));
-                    glutSolidSphere(0.90, 15, 15);              // 球
-
-                    ///* テクスチャ座標の自動生成を無効にする */
-                    //glDisable(GL_TEXTURE_GEN_S);
-                    //glDisable(GL_TEXTURE_GEN_T);
-
-                    //glDisable(GL_TEXTURE_2D);
-                }glPopMatrix();
+                //glPushMatrix(); {
+                //    glPushMatrix(); {
+                //        glTranslatef((i * gridSize + randValue[i][j][0] + gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
+                //        glutSolidSphere(0.10, 15, 15);              // 球
+                //    }glPopMatrix();
+                //    glPushMatrix(); {
+                //        glTranslatef((i * gridSize + randValue[i][j][0] - gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
+                //        glutSolidSphere(0.10, 15, 15);              // 球
+                //    }glPopMatrix();
+                //}glPopMatrix();
             }
             // 床
             if (field[i][j] != 0) {
-                //GLfloat mat0diff[] = { 0.780392,  0.780392, 0.780392, 1.0 };
-                //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff);
-                plate.drawFloor((i * GridSize), -1.0, (j * GridSize), GridSize);
+                glEnable(GL_TEXTURE_2D);
+                plate.drawFloor((i * gridSize), -1.0, (j * gridSize), gridSize);
+                glDisable(GL_TEXTURE_2D);
             }
         }
     }

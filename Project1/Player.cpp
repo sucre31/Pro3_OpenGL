@@ -5,8 +5,18 @@
 #include "Player.h"
 #include "SystemMain.h"
 
-Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(1.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
     headLight.setLightNumber(1);
+    pedalAccel.setCheckKey(0);
+    pedalAccel.setX(-1.0);
+    pedalAccel.setY(-2.6f);
+    pedalAccel.setScaleX(0.3);
+    pedalAccel.setScaleY(0.8);
+    pedalBrake.setCheckKey(1);
+    pedalBrake.setX(1.0);
+    pedalBrake.setY(-2.6f);
+    pedalBrake.setScaleX(0.35);
+    pedalBrake.setScaleY(0.5);
 }
 
 void Player::draw() {
@@ -33,8 +43,8 @@ void Player::draw() {
 void Player::drawInfo() {
     shiftLever.draw();
     drawHandle();
-    drawAccel();
-    drawBrake();
+    pedalAccel.draw();
+    pedalBrake.draw();
     drawSpeed();
 }
 
@@ -80,57 +90,9 @@ void Player::drawHandle() {
     }glPopMatrix();
 }
 
-void Player::drawAccel() {
-    const double angle = 30;
-    glPushMatrix(); {       //ハンドル
-        GLfloat mat0ambi[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
-        GLfloat mat0diff[] = { 0.50754,  0.50754, 0.50754, 1.0 };
-        GLfloat mat0spec[] = { 0.508273,  0.508273, 0.508273, 1.0 };
-        GLfloat mat0shine[] = { 51.2 };
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-
-        // 描画
-        glPushMatrix(); {
-            glTranslatef(-1.0, -2.6f, 0.0);
-            glRotatef(speed * (angle / speedMax) + 50, 1.0, 0.0, 0.0);
-            glScalef(0.3, 0.8, 0.1);
-            glPushMatrix(); {
-                glutSolidCube(1.0);
-            }glPopMatrix();
-        }glPopMatrix();
-    }glPopMatrix();
-}
-
-void Player::drawBrake() {
-    const double angle = 30;
-    glPushMatrix(); {       //ブレーキ
-        GLfloat mat0ambi[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
-        GLfloat mat0diff[] = { 0.50754,  0.50754, 0.50754, 1.0 };
-        GLfloat mat0spec[] = { 0.508273,  0.508273, 0.508273, 1.0 };
-        GLfloat mat0shine[] = { 51.2 };
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-
-        // 描画
-        glPushMatrix(); {
-            glTranslatef(1.0, -2.6f, 0.0);
-            glRotatef(speed * (angle / speedMax) + 50, 1.0, 0.0, 0.0);
-            glScalef(0.3, 0.4, 0.1);
-            glPushMatrix(); {
-                glutSolidCube(1.0);
-            }glPopMatrix();
-        }glPopMatrix();
-    }glPopMatrix();
-}
-
 void Player::drawSpeed() {
     glPushMatrix(); {       //スピードメーター
-        GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
+        GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//赤
         GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
         GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
         GLfloat mat0shine[] = { 51.2 };
@@ -140,10 +102,10 @@ void Player::drawSpeed() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 
         // 描画
-        glTranslatef(0.3 * -cos(( 90 * (speed / speedMax) - 135) * (M_PI / 180)), 0.3 * -sin((90 * (speed / speedMax) - 135) * (M_PI / 180)), 0.0);
+        glTranslatef(0.3 * -cos(( 150 * (speed / speedMax) - 225) * (M_PI / 180)), 0.3 * -sin((150 * (speed / speedMax) - 225) * (M_PI / 180)), 0.0);
         glPushMatrix(); {
-            glTranslatef(-2.0, -2.5f, 0.0);
-            glRotatef((speed / speedMax) * 90 - 45, 0.0, 0.0, 1.0);
+            glTranslatef(-2.0, -2.1f, 0.0);
+            glRotatef(150 * (speed / speedMax) - 135, 0.0, 0.0, 1.0);
             glScalef(0.01, 0.5, 0.01);
             glPushMatrix(); {
                 glutSolidCube(1.0);
@@ -207,24 +169,38 @@ void Player::update() {
             z -= speed * -sin(angleY);
         }
     }
-    y += velY;      //y方向の速度を元に更新
 
+    //y方向の更新
     if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
+        //足場なし(真上から見て)
         velY -= 0.1;
+        y += velY; 
     }
     else {
-        if (y < -0.5 || y > 0) {
+        //足場あり
+        if (y < -0.5) {
             velY -= 0.1;
+            y += velY;
+        }
+        else if (y > 0) {
+            velY -= 0.1;
+            y += velY; 
+            if (y < 0) {
+                y = 0;
+            }
         }
         else {
+            // -0.5までなら落ちない
             y = 0;
             velY = 0;
         }
+
+
     }
     if (y < -100) {
-        x = 0;
-        z = 0;
-        y = 5;
+        x = defX;
+        z = defZ;
+        y = 0.0;
         velY = 0;
         angleY = -M_PI / 2;
     }
@@ -248,4 +224,7 @@ void Player::update() {
     //シフトレバーの更新
     shiftLever.update();
 
+    //アクセル・ブレーキの更新
+    pedalAccel.update();
+    pedalBrake.update();
 }

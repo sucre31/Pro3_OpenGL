@@ -13,7 +13,7 @@ public:
 	int checkFieldValue(int i, int j) { return field.getField(i, j); }
 	double getFieldGridSize() const { return FieldGridSize; }
 private:
-	const double FieldGridSize = 4.0;	//1グリッドあたりの大きさ
+	const double FieldGridSize = 5.0;	//1グリッドあたりの大きさ
 	Plate plate;
 	FieldData field;
 };

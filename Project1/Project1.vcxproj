@@ -136,6 +136,7 @@
     <ClCompile Include="InfoView.cpp" />
     <ClCompile Include="Key.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pedal.cpp" />
     <ClCompile Include="Plate.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShiftLever.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="InfoView.h" />
     <ClInclude Include="Key.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="Pedal.h" />
     <ClInclude Include="Plate.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ShiftLever.h" />

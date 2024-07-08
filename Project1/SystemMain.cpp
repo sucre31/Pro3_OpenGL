@@ -3,6 +3,12 @@
 #include "Define.h"
 
 SystemMain::SystemMain() {
+    player.setX(field.getFieldGridSize());
+    player.setY(0.0);
+    player.setZ(field.getFieldGridSize());
+    player.setDefX(field.getFieldGridSize());
+    player.setDefY(field.getFieldGridSize());
+    player.setDefZ(field.getFieldGridSize());
 }
 
 void SystemMain::lightInit(void) {
@@ -69,7 +75,7 @@ void SystemMain::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     view2D();                   // èáî‘Ç…íçà” îwåióp
-    backGround.draw();
+    //backGround.draw();
 
     GLfloat globalAmbient[] = { 0.0, 0.0, 0.0, 1.0 };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
