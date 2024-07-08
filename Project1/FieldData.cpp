@@ -78,36 +78,38 @@ void FieldData::draw() {
     static const GLfloat red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
     static const GLfloat yellow[] = { 1.0f, 1.0f, 0.0f, 1.0f };
     static const GLfloat blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
-    /*それぞれの盤面の状態を受け取り描画*/
     GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
     GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
     GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
     GLfloat mat0shine[] = { 51.2 };
-    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
-    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
-    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
+    /*それぞれの盤面の状態を受け取り描画*/
     for (i = 0; i < fieldSizeX; i++) {
         for (j = 0; j < fieldSizeZ; j++) {
+            const GLfloat* tmpColor = red;
             switch (field[i][j]) {
             case 0:
-                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, white);
+                tmpColor = white;
                 valid = true;
                 break;
             case 1://赤カプセル
-                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red);
+                tmpColor = red;
                 valid = false;
                 break;
             case 2://黄カプセル
-                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, yellow);
+                tmpColor = yellow;
                 valid = false;
                 break;
             case 3://青カプセル
-                glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, blue);
+                tmpColor = blue;
                 valid = false;
                 break;
             default:
                 break;
             }
+            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //環境光の反射率を設定
+            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //拡散光の反射率を設定
+            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //鏡面光の反射率を設定
+            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // 球
             if (valid) {
                 glPushMatrix(); {

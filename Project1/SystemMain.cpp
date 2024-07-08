@@ -69,23 +69,24 @@ void SystemMain::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     view2D();                   // 順番に注意 背景用
-    //backGround.draw();
+    backGround.draw();
+
+    GLfloat globalAmbient[] = { 0.0, 0.0, 0.0, 1.0 };
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
     view3D();
     gluLookAt(camera.getX(), camera.getY(),camera.getZ(), player.getX(), player.getY() + 2, player.getZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
-    GLfloat lightPosition[4] = { 0.0, 5.0, -10.0, 1.0 }; //光源の位置
-    GLfloat light_ambient[] = { 0.1f, 0.1f, 0.1f, 1.0f };    //環境光
+    GLfloat lightPosition[4] = { 0.0, 5.0, 0.0, 1.0 }; //光源の位置
+    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0f };    //環境光
     GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
-    GLfloat  light_specular[] = { 0.0f, 0.0f, 0.0f, 1.0f };     //鏡面光
+    GLfloat  light_specular[] = { 0.81f, 0.81f, 0.81f, 1.0f };     //鏡面光
     glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.001);   //光の減衰
-    glPushMatrix(); {
-        field.draw();
-        player.draw();
-    }glPopMatrix();
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0006);   //光の減衰
+    field.draw();
+    player.draw();
 
     view2D();                   // インタフェース
     info.draw();
@@ -99,9 +100,7 @@ void SystemMain::draw() {
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
     gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    glPushMatrix(); {
-        player.drawInfo();
-    }glPopMatrix();
+    player.drawInfo();
 
     glutSwapBuffers(); // バッファの切り替え
 

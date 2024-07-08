@@ -6,7 +6,7 @@
 #include "SystemMain.h"
 
 Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(0.8), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
-
+    headLight.setLightNumber(1);
 }
 
 void Player::draw() {
@@ -19,11 +19,15 @@ void Player::draw() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
         GLfloat mat0shine[] = { 27.89743616 };//真鍮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
+        GLfloat materialEmission[] = { 0.0, 0.0, 0.0, 1.0 };
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
         //自機の描画
         glTranslatef(x, y, z); //位置変数をもとに移動
         glRotatef(angleY * (180 / M_PI) + 1.5 * handleAngle * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転 handleAngleも考慮
         glutSolidTeapot(1.0);            //自機はティーポット(笑)
     }glPopMatrix();
+
+    headLight.draw();
 }
 
 void Player::drawInfo() {
@@ -234,6 +238,14 @@ void Player::update() {
     SystemMain::getIns()->camera.setY(y + 4.5);
     SystemMain::getIns()->camera.setZ(z + 18 * sin(angleY));
 
+    // ヘッドライト位置の更新
+    headLight.setHeadLightPosX(x);
+    headLight.setHeadLightPosY(y);
+    headLight.setHeadLightPosZ(z);
+    headLight.setAngle(angleY);
+    headLight.update();
+
     //シフトレバーの更新
     shiftLever.update();
+
 }

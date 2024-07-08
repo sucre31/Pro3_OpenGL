@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ShiftLever.h"
+#include "HeadLight.h"
 
 class Player
 {
@@ -18,6 +19,7 @@ public:
 	void setZ(double zIn) { z = zIn; }
 private:
 	ShiftLever shiftLever;
+	HeadLight headLight;
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
