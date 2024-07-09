@@ -108,6 +108,9 @@ void SystemMain::draw() {
     gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
     player.drawInfo();
 
+    view2D();
+    player.drawInfo2D();
+
     glutSwapBuffers(); // バッファの切り替え
 
 

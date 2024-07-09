@@ -127,7 +127,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="FuelMeter.cpp" />
+    <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Define.cpp" />
     <ClCompile Include="FieldData.cpp" />
@@ -144,7 +145,8 @@
     <ClCompile Include="SystemMain.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="FuelMeter.h" />
+    <ClInclude Include="MapData.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />
     <ClInclude Include="FieldData.h" />

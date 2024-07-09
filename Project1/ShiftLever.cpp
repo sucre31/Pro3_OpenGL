@@ -15,12 +15,12 @@ void ShiftLever::draw() {
 		glRotatef(15 + shiftAngle, 1.0, 0.0, 0.0);
 		glTranslatef(0.0f, 0.0f, -2.0f);
 		glPushMatrix(); {
-			glTranslatef(1.5f, -2.0f, 1.0f);
+			glTranslatef(1.0f, -2.0f, 1.0f);
 			glScalef(0.1, 0.1, 2.0);
 			glutSolidCube(0.8);
 		}glPopMatrix();
 		glPushMatrix(); {
-			glTranslatef(1.5f, -2.0f, 0.0f);
+			glTranslatef(1.0f, -2.0f, 0.0f);
 			glutSolidSphere(0.20, 40, 40);
 		}glPopMatrix();
 	}glPopMatrix();

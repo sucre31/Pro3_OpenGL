@@ -6,6 +6,10 @@
 #include "SystemMain.h"
 
 Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(1.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+    fuel = 200;
+    fuelMax = 200;
+    fuelMeter.setFuel(fuel);
+    fuelMeter.setFuelMax(fuelMax);
     headLight.setLightNumber(1);
     pedalAccel.setCheckKey(0);
     pedalAccel.setX(-1.0);
@@ -46,6 +50,11 @@ void Player::drawInfo() {
     pedalAccel.draw();
     pedalBrake.draw();
     drawSpeed();
+}
+
+void Player::drawInfo2D() {
+    carNavi.draw();
+    fuelMeter.draw();
 }
 
 void Player::drawHandle() {
@@ -134,7 +143,10 @@ void Player::update() {
     }
     //アクセル
     if (SystemMain::getIns()->key.getKeyUpON()) {
-        speed += accel;
+        if (fuel > 0) {
+            speed += accel;
+            fuel -= 0.05;
+        }
     }
     if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
         speed -= brake;
@@ -168,6 +180,10 @@ void Player::update() {
             x -= speed * cos(angleY);
             z -= speed * -sin(angleY);
         }
+    }
+    fuel -= 0.001; // エンジン切らないと燃料減る あとライトとか
+    if (fuel < 0) {
+        fuel = 0;
     }
 
     //y方向の更新
@@ -227,4 +243,11 @@ void Player::update() {
     //アクセル・ブレーキの更新
     pedalAccel.update();
     pedalBrake.update();
+
+    //カーナビの更新
+    carNavi.setPlayerX(FieldX);
+    carNavi.setPlayerZ(FieldZ);
+
+    //燃料の更新
+    fuelMeter.setFuel(fuel);
 }

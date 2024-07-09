@@ -5,6 +5,8 @@
 #include "SystemMain.h"
 
 FieldData::FieldData() {
+    fieldSizeX = fieldGridNumber;
+    fieldSizeZ = fieldGridNumber;
 	int i, j;
     bool valid = true;     // 配置するか?
     srand((unsigned int)time(NULL));        // 盤面にデータを設置
