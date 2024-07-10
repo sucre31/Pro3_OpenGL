@@ -2,6 +2,7 @@
 
 FieldManipulator::FieldManipulator(){
 	field.setGridSize(FieldGridSize);
+	fieldGridNumber = field.getFieldGridNum();
 }
 
 void FieldManipulator::draw() {
@@ -19,8 +20,8 @@ int FieldManipulator::getFieldX(double x) {
 	if (Num < 0) {
 		Num = 0;
 	}
-	if (Num >= field.fieldSizeX) {
-		Num = field.fieldSizeX - 1;
+	if (Num >= field.getFieldGridNum()) {
+		Num = field.getFieldGridNum() - 1;
 	}
 	return Num;
 }
@@ -31,8 +32,8 @@ int FieldManipulator::getFieldZ(double z) {
 	if (Num < 0) {
 		Num = 0;
 	}
-	if (Num >= field.fieldSizeZ) {
-		Num = field.fieldSizeZ - 1;
+	if (Num >= field.getFieldGridNum()) {
+		Num = field.getFieldGridNum() - 1;
 	}
 	return Num;
 }

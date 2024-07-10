@@ -2,7 +2,7 @@
 #include "Singleton.h"
 #include "Key.h"
 #include "FieldManipulator.h"
-#include "BackGround.h"
+#include "MapData.h"
 #include "Player.h"
 #include "Camera.h"
 #include "InfoView.h"
@@ -12,8 +12,7 @@ class SystemMain final : public Singleton<SystemMain>
 {
 public:
 	Key key;						//キー入力を保持
-	FieldData fieldData;			// 各インスタンスの所持
-	BackGround backGround;
+	MapData backGround;				// 各インスタンスの所持
 	FieldManipulator field;
 	Player player;
 	Camera camera;
@@ -30,7 +29,6 @@ public:
 	static void specialKey(int, int, int);
 	static void specialKeyUp(int, int, int);
 private:
-	//float CamaraX, CameraY, CameraZ;	// クラスにした方がいいかも した
 	int winH, winW;					// ウィンドウサイズを保持
 	void view2D();					// 描画を2Dに
 	void view3D();					// 描画を3Dに

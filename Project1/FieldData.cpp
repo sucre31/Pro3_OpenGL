@@ -5,6 +5,8 @@
 #include "SystemMain.h"
 
 FieldData::FieldData() {
+    fieldSizeX = fieldGridNumber;
+    fieldSizeZ = fieldGridNumber;
 	int i, j;
     bool valid = true;     // 配置するか?
     srand((unsigned int)time(NULL));        // 盤面にデータを設置
@@ -115,16 +117,10 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // 球
             if (valid) {
-                //glPushMatrix(); {
-                //    glPushMatrix(); {
-                //        glTranslatef((i * gridSize + randValue[i][j][0] + gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
-                //        glutSolidSphere(0.10, 15, 15);              // 球
-                //    }glPopMatrix();
-                //    glPushMatrix(); {
-                //        glTranslatef((i * gridSize + randValue[i][j][0] - gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
-                //        glutSolidSphere(0.10, 15, 15);              // 球
-                //    }glPopMatrix();
-                //}glPopMatrix();
+                glPushMatrix(); {
+                    glTranslatef((i * gridSize), -0.9, (j * gridSize));
+                    glutSolidCube(gridSize);              // 球
+                }glPopMatrix();
             }
             // 床
             if (field[i][j] != 0) {

@@ -9,15 +9,17 @@ public:
 	void update();
 	void setField(int x, int y, int value) { field[x][y] = value; }
 	int getField(int x, int y) { return field[x][y]; }
+	int getFieldGridNum() { return fieldGridNumber; }
 	void setGridSize(double size) { gridSize = size; }
-	static const int fieldSizeX = 20;
-	static const int fieldSizeZ = 20;
+	static const int fieldGridNumber = 20;
 private:
+	int fieldSizeX;
+	int fieldSizeZ;
 	Plate plate;
 	double gridSize;
 	const double brank = 8.0;
-	int field[fieldSizeX][fieldSizeZ];				// î’ñ èÓïÒ
-	double randValue[fieldSizeX][fieldSizeZ][2];        //Ç†Ç∆Ç≈ÇØÇ∑
-	double randValueVel[fieldSizeX][fieldSizeZ][2];
+	int field[fieldGridNumber][fieldGridNumber];				// î’ñ èÓïÒ
+	double randValue[fieldGridNumber][fieldGridNumber][2];        //Ç†Ç∆Ç≈ÇØÇ∑
+	double randValueVel[fieldGridNumber][fieldGridNumber][2];
 };
 

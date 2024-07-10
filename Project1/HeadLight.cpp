@@ -30,7 +30,6 @@ void HeadLight::draw() {
 	GLfloat mat0ambi[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
 	GLfloat mat0diff[] = { 0.50754,  0.50754, 0.50754, 1.0 };
 	GLfloat mat0spec[] = { 0.508273,  0.508273, 0.508273, 1.0 };
-	GLfloat mat0emis[] = { 0.5, 0.5, 0.4, 1.0 };
 	GLfloat mat0shine[] = { 51.2 };
 	configLight();
 	glPushMatrix(); {
@@ -70,5 +69,18 @@ void HeadLight::configLight(){
 		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 21.0);// スポットライトの絞り（デフォルト 180.0）
 		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.01);// スポットライトの中心からの減衰の度合い（デフォルト 0）
 		break;
+	}
+	if (!lightOn) {
+		glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient_off);
+		glLightfv(GL_LIGHT1, GL_DIFFUSE, light_diffuse_off);
+		glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular_off);
+		mat0emis[0] = 0.0;
+		mat0emis[1] = 0.0;
+		mat0emis[2] = 0.0;
+	}
+	else {
+		mat0emis[0] = 0.4;
+		mat0emis[1] = 0.4;
+		mat0emis[2] = 0.2;
 	}
 }
