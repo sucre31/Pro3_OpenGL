@@ -8,6 +8,7 @@
 Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(1.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
     lightSwitch = true;
     lightChanged = false;
+    inTheWall = false;
     fuel = 200;
     fuelMax = 200;
     fuelMeter.setFuel(fuel);
@@ -152,17 +153,33 @@ void Player::update() {
         }
     }
     if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
-        speed -= brake;
+        if (speed < 0) {
+            speed += brake;
+            if (speed > 0) {
+                speed = 0;
+            }
+        }
+        else {
+            speed -= brake;
+            if (speed < 0) {
+                speed = 0;
+            }
+        }
     } 
     else {
         //speed += 0.001;             //クリープ現象
     }
-    speed -= 0.004;       //何もしなくても速度は減る
+    if (speed < 0) {//何もしなくても速度は減る
+        speed += 0.004;
+    }
+    else {
+        speed -= 0.004;
+    }
     if (speed > speedMax) { //って思ったらスピード制限
         speed = speedMax;
     }
     if (speed < 0) {
-        speed = 0;
+        //speed = 0;
     }
     if (speed == 0) {       //速度が0のときだけシフト判定
         if (SystemMain::getIns()->key.getKeyZON() > 0) {
@@ -172,7 +189,7 @@ void Player::update() {
             shift = 0;
         }
     }
-    if (speed > 0) {
+    if (speed > 0 || 1) {
         if (shift == 0) {
             angleY += speed * handleAngle;
             x += speed * cos(angleY);
@@ -204,10 +221,14 @@ void Player::update() {
     //y方向の更新
     if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
         //足場なし(真上から見て)
-        speed = 0;      //浸透圧で抜けれるんだけど
-
+        if (!inTheWall) {
+            double e = 0.7; //反発係数
+            speed = -speed * e;      //浸透圧で抜けれるんだけど
+            inTheWall = true;
+        }
     }
     else {
+        inTheWall = false;
         //足場あり
         if (y < -0.5) {
             velY -= 0.1;

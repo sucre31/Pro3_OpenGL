@@ -37,6 +37,7 @@ private:
 	int FieldX, FieldZ;		// グリッド座標変換
 	bool lightSwitch;		// ヘッドライトをつけるか
 	bool lightChanged;		// ほんとはキー入力側で対応すべき
+	bool inTheWall; //あとでけす
 	double power;			// 電力
 	double accel;			// アクセル(加速度)
 	double brake;			// ブレーキ(加速度)
