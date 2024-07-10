@@ -27,7 +27,7 @@ void ShiftLever::draw() {
 }
 
 void ShiftLever::update() {
-	if (SystemMain::getIns()->key.getKeyZON()) {
+	if (SystemMain::getIns()->key.getKeyZON() > 0) {
 		shiftAngle -= 0.9;
 		if (shiftAngle < -10.0) {
 			shiftAngle = -10.0;

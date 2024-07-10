@@ -80,8 +80,9 @@ void SystemMain::draw() {
     GLfloat globalAmbient[] = { 0.0, 0.0, 0.0, 1.0 };
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
 
+    glViewport(0, winH / 4, winW, winH ); //ビューポートを調整
     view3D();
-    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), player.getX(), player.getY() + 2, player.getZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
+    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), camera.getTargetX(), camera.getTargetY() + 2, camera.getTargetZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
     GLfloat lightPosition[4] = { 0.0, 5.0, 0.0, 1.0 }; //光源の位置
     GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0f };    //環境光
     GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
@@ -94,11 +95,11 @@ void SystemMain::draw() {
     field.draw();
     player.draw();
 
-    view2D();                   // インタフェース
+    glViewport(0, winH * (3 / 4), winW, winH); //ビューポートを調整
+    view2D();                   // インタフェース用背景
     info.draw();
 
     view3D();
-    //glDisable(GL_DEPTH_TEST); // 隠面消去を無効
     GLfloat lightPosition2[4] = { 50.0, 100.0, 100.0, 0.0 }; //光源の位置
     GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
     GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光

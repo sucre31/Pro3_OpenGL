@@ -6,7 +6,8 @@ public:
 	bool getKeyDownON() const { return keyDownON; }
 	bool getKeyLeftON() const { return keyLeftON; }
 	bool getKeyRightON() const { return keyRightON; }
-	bool getKeyZON() const { return keyZON; }
+	int getKeyZON() const { return keyZON; }
+	int getKeyXON() const { return keyXON; }
 	int getX() const { return x; }
 	int getY() const { return y; }
 	void setC(unsigned char c) { this->c = c; }
@@ -23,6 +24,7 @@ private:
 	bool keyDownON = false;	// 矢印キーの状態フラグ
 	bool keyLeftON = false;	// 矢印キーの状態フラグ
 	bool keyRightON = false;	// 矢印キーの状態フラグ
-	bool keyZON = false;	//スペースキーの状態フラグ
+	bool keyZON;	//Zキーの状態フラグ
+	int keyXON;	//Xキーの状態フラグ
 };
 

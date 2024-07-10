@@ -6,16 +6,23 @@ void Key::keyboard(unsigned char key, int x, int y)
 {
 	switch (key) {
 	case 'z':
-		keyZON = true;
+		keyZON++;
+		break;
+	case 'x':
+		keyXON++;
 		break;
 	}
+
 }
 
 void Key::keyboardUp(unsigned char key, int x, int y)
 {
 	switch (key) {
 	case 'z':
-		keyZON = false;
+		keyZON = 0;
+		break;
+	case 'x':
+		keyXON = 0;
 		break;
 	}
 }

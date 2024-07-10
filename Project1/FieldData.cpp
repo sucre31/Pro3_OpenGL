@@ -117,16 +117,10 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // ãÖ
             if (valid) {
-                //glPushMatrix(); {
-                //    glPushMatrix(); {
-                //        glTranslatef((i * gridSize + randValue[i][j][0] + gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
-                //        glutSolidSphere(0.10, 15, 15);              // ãÖ
-                //    }glPopMatrix();
-                //    glPushMatrix(); {
-                //        glTranslatef((i * gridSize + randValue[i][j][0] - gridSize / 2), -0.9, (j * gridSize + randValue[i][j][1]));
-                //        glutSolidSphere(0.10, 15, 15);              // ãÖ
-                //    }glPopMatrix();
-                //}glPopMatrix();
+                glPushMatrix(); {
+                    glTranslatef((i * gridSize), -0.9, (j * gridSize));
+                    glutSolidCube(gridSize);              // ãÖ
+                }glPopMatrix();
             }
             // è∞
             if (field[i][j] != 0) {

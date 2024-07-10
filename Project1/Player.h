@@ -24,6 +24,7 @@ public:
 	void setDefX(double xIn) { defX = xIn; }
 	void setDefY(double yIn) { defY = yIn; }
 	void setDefZ(double zIn) { defZ = zIn; }
+	bool isFuelRemaining() { return (fuel > 0); };
 private:
 	ShiftLever shiftLever;
 	HeadLight headLight;
@@ -34,6 +35,9 @@ private:
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
+	bool lightSwitch;		// ヘッドライトをつけるか
+	bool lightChanged;		// ほんとはキー入力側で対応すべき
+	double power;			// 電力
 	double accel;			// アクセル(加速度)
 	double brake;			// ブレーキ(加速度)
 	double speed;			// 速さ

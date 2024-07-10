@@ -6,6 +6,8 @@
 #include "SystemMain.h"
 
 Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(1.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+    lightSwitch = true;
+    lightChanged = false;
     fuel = 200;
     fuelMax = 200;
     fuelMeter.setFuel(fuel);
@@ -125,6 +127,7 @@ void Player::drawSpeed() {
 
 
 void Player::update() {
+    power = 0.005;  //電力の再計算
     //ハンドル回転
     if (SystemMain::getIns()->key.getKeyLeftON()) {
         handleAngle += handling;
@@ -145,7 +148,7 @@ void Player::update() {
     if (SystemMain::getIns()->key.getKeyUpON()) {
         if (fuel > 0) {
             speed += accel;
-            fuel -= 0.05;
+            power += 0.04;
         }
     }
     if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
@@ -162,7 +165,7 @@ void Player::update() {
         speed = 0;
     }
     if (speed == 0) {       //速度が0のときだけシフト判定
-        if (SystemMain::getIns()->key.getKeyZON()) {
+        if (SystemMain::getIns()->key.getKeyZON() > 0) {
             shift = 1;
         }
         else {
@@ -181,16 +184,28 @@ void Player::update() {
             z -= speed * -sin(angleY);
         }
     }
-    fuel -= 0.001; // エンジン切らないと燃料減る あとライトとか
-    if (fuel < 0) {
+    if (SystemMain::getIns()->key.getKeyXON() > 0) {
+        if (!lightChanged) {
+            lightSwitch = !lightSwitch;
+            lightChanged = true;        //連続で切り替わらないようにする
+        }
+    }
+    else {
+        lightChanged = false;
+    }
+    if (lightSwitch) {
+        power += 0.01;
+    }
+    fuel -= power; // エンジン切らないと燃料減る あとライトとか
+    if (fuel < 0 ) {
         fuel = 0;
     }
 
     //y方向の更新
     if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
         //足場なし(真上から見て)
-        velY -= 0.1;
-        y += velY; 
+        speed = 0;      //浸透圧で抜けれるんだけど
+
     }
     else {
         //足場あり
@@ -226,15 +241,19 @@ void Player::update() {
     FieldZ = SystemMain::getIns()->field.getFieldZ(z);
 
     //カメラ位置の更新
-    SystemMain::getIns()->camera.setX(x - 18 * cos(angleY));
-    SystemMain::getIns()->camera.setY(y + 4.5);
-    SystemMain::getIns()->camera.setZ(z + 18 * sin(angleY));
+    SystemMain::getIns()->camera.setX(x - 1 * cos(angleY));
+    SystemMain::getIns()->camera.setY(y + 1.5);
+    SystemMain::getIns()->camera.setZ(z + 1 * sin(angleY));
+    SystemMain::getIns()->camera.setTargetX(x - 10 * cos(angleY + M_PI));
+    SystemMain::getIns()->camera.setTargetY(-1.0);
+    SystemMain::getIns()->camera.setTargetZ(z + 10 * sin(angleY + M_PI));
 
     // ヘッドライト位置の更新
     headLight.setHeadLightPosX(x);
     headLight.setHeadLightPosY(y);
     headLight.setHeadLightPosZ(z);
     headLight.setAngle(angleY);
+    headLight.setLightValid(isFuelRemaining() && lightSwitch);
     headLight.update();
 
     //シフトレバーの更新

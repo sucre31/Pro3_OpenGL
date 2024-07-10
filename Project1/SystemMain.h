@@ -29,7 +29,6 @@ public:
 	static void specialKey(int, int, int);
 	static void specialKeyUp(int, int, int);
 private:
-	//float CamaraX, CameraY, CameraZ;	// クラスにした方がいいかも した
 	int winH, winW;					// ウィンドウサイズを保持
 	void view2D();					// 描画を2Dに
 	void view3D();					// 描画を3Dに
