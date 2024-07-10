@@ -142,7 +142,9 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ShiftLever.cpp" />
     <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="SpeedMeter.cpp" />
     <ClCompile Include="SystemMain.cpp" />
+    <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FuelMeter.h" />
@@ -160,7 +162,9 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="ShiftLever.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="SpeedMeter.h" />
     <ClInclude Include="SystemMain.h" />
+    <ClInclude Include="Texture.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

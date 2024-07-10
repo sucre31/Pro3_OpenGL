@@ -13,6 +13,8 @@ Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.
     fuelMax = 200;
     fuelMeter.setFuel(fuel);
     fuelMeter.setFuelMax(fuelMax);
+    speedMeter.setMaxSpeed(speedMax);
+    speedMeter.setSpeed(speed);
     headLight.setLightNumber(1);
     pedalAccel.setCheckKey(0);
     pedalAccel.setX(-1.0);
@@ -52,7 +54,7 @@ void Player::drawInfo() {
     drawHandle();
     pedalAccel.draw();
     pedalBrake.draw();
-    drawSpeed();
+    speedMeter.draw();
 }
 
 void Player::drawInfo2D() {
@@ -97,30 +99,6 @@ void Player::drawHandle() {
                     glutSolidCube(0.8);
                 }glPopMatrix();
                 glutSolidTorus(0.2, 0.0, 5, 10);            //ハンドルの中心
-            }glPopMatrix();
-        }glPopMatrix();
-    }glPopMatrix();
-}
-
-void Player::drawSpeed() {
-    glPushMatrix(); {       //スピードメーター
-        GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//赤
-        GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
-        GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
-        GLfloat mat0shine[] = { 51.2 };
-        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //環境光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //拡散光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
-        glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-
-        // 描画
-        glTranslatef(0.3 * -cos(( 150 * (speed / speedMax) - 225) * (M_PI / 180)), 0.3 * -sin((150 * (speed / speedMax) - 225) * (M_PI / 180)), 0.0);
-        glPushMatrix(); {
-            glTranslatef(-2.0, -2.1f, 0.0);
-            glRotatef(150 * (speed / speedMax) - 135, 0.0, 0.0, 1.0);
-            glScalef(0.01, 0.5, 0.01);
-            glPushMatrix(); {
-                glutSolidCube(1.0);
             }glPopMatrix();
         }glPopMatrix();
     }glPopMatrix();
@@ -263,10 +241,10 @@ void Player::update() {
 
     //カメラ位置の更新
     SystemMain::getIns()->camera.setX(x - 1 * cos(angleY));
-    SystemMain::getIns()->camera.setY(y + 1.5);
+    SystemMain::getIns()->camera.setY(y + 2.5);
     SystemMain::getIns()->camera.setZ(z + 1 * sin(angleY));
     SystemMain::getIns()->camera.setTargetX(x - 10 * cos(angleY + M_PI));
-    SystemMain::getIns()->camera.setTargetY(-1.0);
+    SystemMain::getIns()->camera.setTargetY(-0.0);
     SystemMain::getIns()->camera.setTargetZ(z + 10 * sin(angleY + M_PI));
 
     // ヘッドライト位置の更新
@@ -287,6 +265,9 @@ void Player::update() {
     //カーナビの更新
     carNavi.setPlayerX(FieldX);
     carNavi.setPlayerZ(FieldZ);
+
+    //スピードメーターの更新
+    speedMeter.setSpeed(speed);
 
     //燃料の更新
     fuelMeter.setFuel(fuel);

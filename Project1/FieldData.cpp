@@ -115,18 +115,19 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //拡散光の反射率を設定
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //鏡面光の反射率を設定
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
-            // 球
+            // 壁
             if (valid) {
+                glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
                 glPushMatrix(); {
                     glTranslatef((i * gridSize), -0.9, (j * gridSize));
                     glutSolidCube(gridSize);              // 球
                 }glPopMatrix();
+                glDisable(GL_TEXTURE_2D);
+                
             }
             // 床
             if (field[i][j] != 0) {
-                glEnable(GL_TEXTURE_2D);
                 plate.drawFloor((i * gridSize), -1.0, (j * gridSize), gridSize);
-                glDisable(GL_TEXTURE_2D);
             }
         }
     }

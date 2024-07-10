@@ -5,6 +5,7 @@
 #include "Pedal.h"
 #include "MapData.h"
 #include "FuelMeter.h"
+#include "SpeedMeter.h"
 
 class Player
 {
@@ -32,6 +33,7 @@ private:
 	Pedal pedalBrake;
 	MapData carNavi;
 	FuelMeter fuelMeter;
+	SpeedMeter speedMeter;
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
@@ -52,6 +54,5 @@ private:
 	double handleAngleMax;	// ハンドルの最大回転角
 	double fuel, fuelMax;
 	void drawHandle();
-	void drawSpeed();
 };
 

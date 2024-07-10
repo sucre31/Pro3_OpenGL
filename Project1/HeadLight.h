@@ -18,7 +18,7 @@ private:
 	GLfloat lightPosition[4]; //ŒõŒ¹‚ÌˆÊ’u
 	GLfloat spotDirrection[3];//ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ðŒü‚¯‚é•ûŒü
 	const GLfloat light_ambient_normal[4] = { 0.09, 0.09, 0.09, 1.0f };    //ŠÂ‹«Œõ
-	const GLfloat  light_diffuse_normal[4] = { 1.0f, 1.0f, 0.8f, 1.0f };      //ŠgŽUŒõ
+	const GLfloat  light_diffuse_normal[4] = { 1.0f, 1.0f, 0.2, 1.0f };      //ŠgŽUŒõ
 	const GLfloat  light_specular_normal[4] = { 0.8f, 0.8f, 0.8f, 1.0f };     //‹¾–ÊŒõ
 	const GLfloat light_ambient_off[4] = { 0.00, 0.00, 0.00, 1.0f };    //ŠÂ‹«Œõ
 	const GLfloat  light_diffuse_off[4] = { 0.0f, 0.0f, 0.0f, 1.0f };      //ŠgŽUŒõ

@@ -1,6 +1,7 @@
 #include <glut.h>
 #include "SystemMain.h"
 #include "Define.h"
+#include "Texture.h"
 
 SystemMain::SystemMain() {
     player.setX(field.getFieldGridSize());
@@ -22,19 +23,25 @@ void SystemMain::lightInit(void) {
 
 void SystemMain::textureInit(void) {
 
-    static double genfunc[][4] = {   /* テクスチャ生成関数のパラメータ */
-        { 1.0, 0.0, 0.0, 0.0 },
-        { 0.0, 1.0, 0.0, 0.0 },
-    };
+    //static double genfunc[][4] = {   /* テクスチャ生成関数のパラメータ */
+    //    { 1.0, 0.0, 0.0, 0.0 },
+    //    { 0.0, 1.0, 0.0, 0.0 },
+    //};
 
-    /* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    ///* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
+    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
+    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
 
-    /* テクスチャ座標生成関数の設定 */
-    glTexGendv(GL_S, GL_OBJECT_PLANE, genfunc[0]);
-    glTexGendv(GL_T, GL_OBJECT_PLANE, genfunc[1]);
-
+    ///* テクスチャ座標生成関数の設定 */
+    //glTexGendv(GL_S, GL_OBJECT_PLANE, genfunc[0]);
+    //glTexGendv(GL_T, GL_OBJECT_PLANE, genfunc[1]);
+    glEnable(GL_DEPTH_TEST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // テクスチャの拡大設定
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // テクスチャの縮小設定
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    Texture::getIns()->setTexture(1);
 }
 
 void SystemMain::display() {

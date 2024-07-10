@@ -15,7 +15,7 @@ public:
 	void setFieldGridNumber(int num) { fieldGridNumber = num; }
 	int getFieldGridNumber() { return fieldGridNumber; }
 private:
-	const double FieldGridSize = 5.0;	//1グリッドあたりの大きさ
+	const double FieldGridSize = 7.0;	//1グリッドあたりの大きさ
 	int fieldGridNumber;
 	Plate plate;
 	FieldData field;
