@@ -10,6 +10,8 @@ public:
 		//—ñ‹“Žq‚Ì’è‹`
 		SPEEDMETER,
 		CONCRETE,
+		CONCRETECUBE,
+		FLOOR
 	};
 	void initTexture();
 	void loadTexture(const char texture1[], int Number);

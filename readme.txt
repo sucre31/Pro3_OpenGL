@@ -1,6 +1,6 @@
 参考:
-OpenGLでPNGファイルを使う話(2024/7/10 閲覧)
-https://proken.mydns.jp/index.php?plugin=attach&refer=pg_koneta%2FPNGInOpenGL&openfile=PNGInOpenGL.html
+床井研究室 - 第１回 画像の読み込み (2024/07/12 閲覧)
+https://marina.sys.wakayama-u.ac.jp/~tokoi/?date=20040913
 
-PNG Encoder / Decoder in C++(2024/7/10 閲覧)
-http://ysflight.in.coocan.jp/programming/pngdecoder/pngdecoderj.html
+素材:
+https://www.digital-architex.com/5934.php

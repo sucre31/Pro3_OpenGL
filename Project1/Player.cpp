@@ -150,7 +150,7 @@ void Player::update() {
     if (speed < 0) {//何もしなくても速度は減る
         speed += 0.004;
     }
-    else {
+    else if (speed > 0) {
         speed -= 0.004;
     }
     if (speed > speedMax) { //って思ったらスピード制限
@@ -167,7 +167,7 @@ void Player::update() {
             shift = 0;
         }
     }
-    if (speed > 0 || 1) {
+    if (speed > 0 || true) {
         if (shift == 0) {
             angleY += speed * handleAngle;
             x += speed * cos(angleY);
@@ -200,7 +200,7 @@ void Player::update() {
     if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
         //足場なし(真上から見て)
         if (!inTheWall) {
-            double e = 0.7; //反発係数
+            double e = 0.2; //反発係数
             speed = -speed * e;      //浸透圧で抜けれるんだけど
             inTheWall = true;
         }

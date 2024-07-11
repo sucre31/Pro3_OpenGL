@@ -6,6 +6,10 @@ Texture::Texture() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     loadTexture("Assets/texture/Circle.data", SPEEDMETER);
     loadTexture("Assets/texture/Concrete.data", CONCRETE);
+    loadTexture("Assets/texture/ConcreteCube.data", CONCRETECUBE);
+    loadTexture("Assets/texture/Tile.data", FLOOR);
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
+        GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETECUBE]);
 }
 
 void Texture::initTexture() {
@@ -26,7 +30,7 @@ void Texture::initTexture() {
     glAlphaFunc(GL_GREATER, 0.5); //アルファ値による透過処理
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // テクスチャの拡大設定
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR); // テクスチャの拡大設定
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // テクスチャの縮小設定
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 }
@@ -46,16 +50,23 @@ void Texture::loadTexture(const char texture1[], int Number) {
 }
 
 void Texture::setTexture(int textureNumber) {
+    int i;
     switch (textureNumber) {
     case SPEEDMETER:
-        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH, TEXHEIGHT,
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTH, TEXHEIGHT,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[SPEEDMETER]);
         break;
     case CONCRETE:
-        //gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH, TEXHEIGHT,
-        //    GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 128, 128,
-            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+        for (i = 0; i < 6; i++) {   // 6面入れ替え
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+        }
+        break;
+    case FLOOR:
+        for (i = 0; i < 6; i++) {   // 6面入れ替え
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[FLOOR]);
+        }
         break;
     }
 }
