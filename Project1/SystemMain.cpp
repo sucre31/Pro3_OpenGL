@@ -23,24 +23,7 @@ void SystemMain::lightInit(void) {
 
 void SystemMain::textureInit(void) {
 
-    //static double genfunc[][4] = {   /* テクスチャ生成関数のパラメータ */
-    //    { 1.0, 0.0, 0.0, 0.0 },
-    //    { 0.0, 1.0, 0.0, 0.0 },
-    //};
-
-    ///* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
-    //glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    //glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-
-    ///* テクスチャ座標生成関数の設定 */
-    //glTexGendv(GL_S, GL_OBJECT_PLANE, genfunc[0]);
-    //glTexGendv(GL_T, GL_OBJECT_PLANE, genfunc[1]);
-    glEnable(GL_DEPTH_TEST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); // テクスチャの拡大設定
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); // テクスチャの縮小設定
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    Texture::getIns()->initTexture();
     Texture::getIns()->setTexture(1);
 }
 
@@ -89,7 +72,7 @@ void SystemMain::draw() {
 
     glViewport(0, winH / 4, winW, winH ); //ビューポートを調整
     view3D();
-    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), camera.getTargetX(), camera.getTargetY() + 2, camera.getTargetZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
+    camera.setLookAt();  // カメラ位置からプレイヤーを見る
     GLfloat lightPosition[4] = { 0.0, 5.0, 0.0, 1.0 }; //光源の位置
     GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0f };    //環境光
     GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光

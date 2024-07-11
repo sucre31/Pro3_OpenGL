@@ -3,6 +3,7 @@
 #include <glut.h>
 #include "FieldData.h"
 #include "SystemMain.h"
+#include "Texture.h"
 
 FieldData::FieldData() {
     fieldSizeX = fieldGridNumber;
@@ -77,7 +78,6 @@ void FieldData::update() {
 
 void FieldData::draw() {
     int i, j;
-    bool valid = false;
     static int maxVel = 0.04;
     static const GLfloat white[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     static const GLfloat red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -88,47 +88,46 @@ void FieldData::draw() {
     GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
     GLfloat mat0shine[] = { 51.2 };
     /*それぞれの盤面の状態を受け取り描画*/
+    Texture::getIns()->setTexture(Texture::getIns()->CONCRETE);
+    glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
+    glEnable(GL_TEXTURE_GEN_S); // テクスチャ座標の自動生成
+    glEnable(GL_TEXTURE_GEN_T);
+    glEnable(GL_TEXTURE_GEN_R);
+    glEnable(GL_TEXTURE_GEN_Q);
+    glMatrixMode(GL_TEXTURE);
+    glLoadIdentity();
+    glTranslated(-0.5, -0.5, 0.0);
+    glScaled(0.2, 0.2, 0.2);
+    gluLookAt(0.0, 2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+
     for (i = 0; i < fieldSizeX; i++) {
         for (j = 0; j < fieldSizeZ; j++) {
-            const GLfloat* tmpColor = red;
-            switch (field[i][j]) {
-            case 0:
-                tmpColor = white;
-                valid = true;
-                break;
-            case 1://赤カプセル
-                tmpColor = red;
-                valid = false;
-                break;
-            case 2://黄カプセル
-                tmpColor = yellow;
-                valid = false;
-                break;
-            case 3://青カプセル
-                tmpColor = blue;
-                valid = false;
-                break;
-            default:
-                break;
-            }
+            const GLfloat* tmpColor = white;
             glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //環境光の反射率を設定
             glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //拡散光の反射率を設定
             glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //鏡面光の反射率を設定
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // 壁
-            if (valid) {
-                glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
+
+            if (field[i][j] == 0) {
+
                 glPushMatrix(); {
-                    glTranslatef((i * gridSize), -0.9, (j * gridSize));
-                    glutSolidCube(gridSize);              // 球
+                    glTranslatef((i * gridSize),1.0, (j * gridSize));
+                    plate.drawBox(gridSize / 2, gridSize / 2, gridSize/ 2);             // 壁
                 }glPopMatrix();
-                glDisable(GL_TEXTURE_2D);
-                
             }
-            // 床
-            if (field[i][j] != 0) {
-                plate.drawFloor((i * gridSize), -1.0, (j * gridSize), gridSize);
+            else if (field[i][j] != 0) { // 床
+                glPushMatrix(); {
+                    glTranslatef((i * gridSize), -(gridSize * (2.0 / 3.0)), (j * gridSize));
+                    plate.drawBox(gridSize / 2, gridSize / 2, gridSize / 2);             // 床
+                }glPopMatrix();
             }
         }
     }
+    glDisable(GL_TEXTURE_GEN_S); // テクスチャマッピング終了
+    glDisable(GL_TEXTURE_GEN_T);
+    glDisable(GL_TEXTURE_GEN_R);
+    glDisable(GL_TEXTURE_GEN_Q);
+    glDisable(GL_TEXTURE_2D);
 }

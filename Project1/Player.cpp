@@ -268,6 +268,7 @@ void Player::update() {
 
     //スピードメーターの更新
     speedMeter.setSpeed(speed);
+    speedMeter.update();
 
     //燃料の更新
     fuelMeter.setFuel(fuel);
