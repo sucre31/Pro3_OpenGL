@@ -5,11 +5,10 @@
 Texture::Texture() {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
     loadTexture("Assets/texture/Circle.data", SPEEDMETER);
-    loadTexture("Assets/texture/Concrete.data", CONCRETE);
-    loadTexture("Assets/texture/ConcreteCube.data", CONCRETECUBE);
-    loadTexture("Assets/texture/Tile.data", FLOOR);
+    loadTexture("Assets/texture/ConcreteWall.data", CONCRETE);
+    loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
     gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
-        GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETECUBE]);
+        GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
 }
 
 void Texture::initTexture() {
@@ -53,7 +52,7 @@ void Texture::setTexture(int textureNumber) {
     int i;
     switch (textureNumber) {
     case SPEEDMETER:
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTH, TEXHEIGHT,
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTHSMALL, TEXHEIGHTSMALL,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[SPEEDMETER]);
         break;
     case CONCRETE:

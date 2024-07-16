@@ -10,6 +10,8 @@ public:
 	void update();
 	int getFieldX(double x);
 	int getFieldZ(double z);
+	double getFieldRemainderX(double x);
+	double getFieldRemainderZ(double z);
 	int checkFieldValue(int i, int j) { return field.getField(i, j); }
 	double getFieldGridSize() const { return FieldGridSize; }
 	void setFieldGridNumber(int num) { fieldGridNumber = num; }

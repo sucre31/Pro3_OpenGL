@@ -83,9 +83,11 @@ void FieldData::draw() {
     static const GLfloat red[] = { 1.0f, 0.0f, 0.0f, 1.0f };
     static const GLfloat yellow[] = { 1.0f, 1.0f, 0.0f, 1.0f };
     static const GLfloat blue[] = { 0.0f, 0.0f, 1.0f, 1.0f };
+    GLfloat matZero[] = { 0.0, 0.0, 0.0, 1.0 };
     GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
     GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
     GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
+    GLfloat mat0emis[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
     GLfloat mat0shine[] = { 51.2 };
     /*それぞれの盤面の状態を受け取り描画*/
     glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
@@ -106,10 +108,16 @@ void FieldData::draw() {
 
             if (getField(i, j) == 0) {
                 glPushMatrix(); {
-                    glTranslatef((i * gridSize),1.0, (j * gridSize));
-                    plate.drawBox(gridSize / 2, gridSize / 2, gridSize/ 2);             // 壁
+                    glTranslatef((i * gridSize), + 1.0, (j * gridSize));
+                    plate.drawBox(gridSize / 2.0, 3 * gridSize / 2, gridSize/ 2.0);             // 壁
                 }glPopMatrix();
             }
+            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
+            glPushMatrix(); {
+                glTranslatef((i * gridSize), 2 * gridSize + 1.0, (j * gridSize));
+                plate.drawBox(gridSize / 2.0, gridSize / 2.0, gridSize / 2.0);             // 天井
+            }glPopMatrix();
+            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
         }
     }
     Texture::getIns()->setTexture(Texture::getIns()->FLOOR);
@@ -122,8 +130,8 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             if (getField(i, j) != 0) { // 床
                 glPushMatrix(); {
-                    glTranslatef((i * gridSize), -(gridSize * (2.0 / 3.0)), (j * gridSize));
-                    plate.drawBox(gridSize / 2, gridSize / 2, gridSize / 2);            
+                    glTranslatef((i * gridSize), -gridSize + 1.0, (j * gridSize));
+                    plate.drawBox(gridSize / 2.0, gridSize / 2.0, gridSize / 2.0);            
                 }glPopMatrix();
             }
         }

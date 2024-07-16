@@ -66,8 +66,8 @@ void HeadLight::configLight(){
 		glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0);   //光の一定減衰率
 		glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002);   //光の2次減衰率
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDirrection); //スポットライトの向ける方向（デフォルト (0,0,-1.0)）
-		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 21.0);// スポットライトの絞り（デフォルト 180.0）
-		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.01);// スポットライトの中心からの減衰の度合い（デフォルト 0）
+		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 25.0);// スポットライトの絞り（デフォルト 180.0）
+		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.0005);// スポットライトの中心からの減衰の度合い（デフォルト 0）
 		break;
 	}
 	if (!lightOn) {

@@ -8,12 +8,12 @@
 void MapData::draw() {   //îwåiÇÃï`âÊ
     // ÉJÅ[ÉiÉr
     int i, j;
-    int loopNum = SystemMain::getIns()->field.getFieldGridNumber();       //ècÅEâ°ÇÃÉ}ÉXÇÃêî
+    int loopNum = SystemMain::getIns()->game.field.getFieldGridNumber();       //ècÅEâ°ÇÃÉ}ÉXÇÃêî
     glColor4f(0.8f, 0.0f, 0.5f, 1.0f);
     for (i = 0; i < loopNum; i++) {
         for (j = 0; j < loopNum; j++) {
             glColor4f(0.4f, 0.4f, 0.4f, 1.0f);
-            switch (SystemMain::getIns()->field.checkFieldValue(i, j)) {
+            switch (SystemMain::getIns()->game.field.checkFieldValue(i, j)) {
             case 0:
                 glColor4f(0.1f, 0.1f, 0.2f, 1.0f);
                 break;
@@ -28,9 +28,13 @@ void MapData::draw() {   //îwåiÇÃï`âÊ
                 break;
             }
             drawSquare((loopNum - i) * squareSize + posX, (loopNum - j) * squareSize + posY);
+        }
+    }
+    for (i = 0; i < loopNum; i++) {
+        for (j = 0; j < loopNum; j++) {
             if (i == playerX && j == playerZ) {
                 glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                Circle2DFill(4.0, (loopNum - i) * squareSize + posX + squareSize / 2, (loopNum - j) * squareSize + posY + squareSize / 2);
+                Circle2DFill(4.0, (loopNum - i) * squareSize + (posX - playerRemainderX) + squareSize / 2, (loopNum - j) * squareSize + (posY - playerRemainderZ) + squareSize / 2);
             }
         }
     }

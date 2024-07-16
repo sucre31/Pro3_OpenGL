@@ -4,12 +4,7 @@
 #include "Texture.h"
 
 SystemMain::SystemMain() {
-    player.setX(field.getFieldGridSize());
-    player.setY(0.0);
-    player.setZ(field.getFieldGridSize());
-    player.setDefX(field.getFieldGridSize());
-    player.setDefY(field.getFieldGridSize());
-    player.setDefZ(field.getFieldGridSize());
+    SceneNum = 0;
 }
 
 void SystemMain::lightInit(void) {
@@ -64,53 +59,29 @@ void SystemMain::draw() {
     glClearColor(0.0, 0.0, 0.0, 1.0); // 画面クリア
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    view2D();                   // 順番に注意 背景用
-    //backGround.draw();
-
-    GLfloat globalAmbient[] = { 0.0, 0.0, 0.0, 1.0 };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
-
-    glViewport(0, winH / 4, winW, winH ); //ビューポートを調整
-    view3D();
-    camera.setLookAt();  // カメラ位置からプレイヤーを見る
-    GLfloat lightPosition[4] = { 0.0, 5.0, 0.0, 1.0 }; //光源の位置
-    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0f };    //環境光
-    GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
-    GLfloat  light_specular[] = { 0.81f, 0.81f, 0.81f, 1.0f };     //鏡面光
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0006);   //光の減衰
-    field.draw();
-    player.draw();
-
-    glViewport(0, winH * (3 / 4), winW, winH); //ビューポートを調整
-    view2D();                   // インタフェース用背景
-    info.draw();
-
-    view3D();
-    GLfloat lightPosition2[4] = { 50.0, 100.0, 100.0, 0.0 }; //光源の位置
-    GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
-    GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition2);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
-    gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    player.drawInfo();
-
-    view2D();
-    player.drawInfo2D();
+    switch (SceneNum) {
+    case 0:
+        title.draw();
+        break;
+    case 1:
+        game.draw();
+        break;
+    }
 
     glutSwapBuffers(); // バッファの切り替え
-
-
 }
 
 void SystemMain::update() {
-    //各インスタンスのupdateを実行
-    player.update();
-    field.update();
+    // シーンの切り替えをここでやってしまう
+    switch (SceneNum) {
+    case 0:
+        title.update();
+        break;
+    case 1:
+        game.update();
+        break;
+    }
+    
     //描画依頼
     glutPostRedisplay();
     //次タイマー登録
@@ -161,4 +132,8 @@ void SystemMain::keyCall(int key, int x, int y) {
 
 void SystemMain::keyCallUp(int key, int x, int y) {
     this->key.specialKeyUp(key, x, y);
+}
+
+void SystemMain::changeScene(int Num) {
+    SceneNum = Num;
 }

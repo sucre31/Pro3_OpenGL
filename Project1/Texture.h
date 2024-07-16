@@ -17,10 +17,10 @@ public:
 	void loadTexture(const char texture1[], int Number);
 	void setTexture(int textureNumber);
 private:
-	static const int TEXHEIGHT = 512;
-	static const int TEXWIDTH = 512;
-	static const int TEXHEIGHTSMALL = 128;
-	static const int TEXWIDTHSMALL = 128;
+	static const int TEXHEIGHT = 1024;
+	static const int TEXWIDTH = 1024;
+	static const int TEXHEIGHTSMALL = 512;
+	static const int TEXWIDTHSMALL = 512;
 	const double genfunc[4][4] = {   /* テクスチャ生成関数のパラメータ */
 		{ 1.0, 0.0, 0.0, 0.0 },
 		{ 0.0, 1.0, 0.0, 0.0 },

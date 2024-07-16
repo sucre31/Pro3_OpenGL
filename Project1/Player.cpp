@@ -149,9 +149,15 @@ void Player::update() {
     }
     if (speed < 0) {//何もしなくても速度は減る
         speed += 0.004;
+        if (speed > 0) {
+            speed = 0;
+        }
     }
     else if (speed > 0) {
         speed -= 0.004;
+        if (speed < 0) {
+            speed = 0;
+        }
     }
     if (speed > speedMax) { //って思ったらスピード制限
         speed = speedMax;
@@ -197,7 +203,7 @@ void Player::update() {
     }
 
     //y方向の更新
-    if (SystemMain::getIns()->field.checkFieldValue(FieldX, FieldZ) == 0) {
+    if (SystemMain::getIns()->game.field.checkFieldValue(FieldX, FieldZ) == 0) {
         //足場なし(真上から見て)
         if (!inTheWall) {
             double e = 0.2; //反発係数
@@ -236,16 +242,16 @@ void Player::update() {
     }
 
     //グリッド座標を更新
-    FieldX = SystemMain::getIns()->field.getFieldX(x);
-    FieldZ = SystemMain::getIns()->field.getFieldZ(z);
+    FieldX = SystemMain::getIns()->game.field.getFieldX(x);
+    FieldZ = SystemMain::getIns()->game.field.getFieldZ(z);
 
     //カメラ位置の更新
-    SystemMain::getIns()->camera.setX(x - 1 * cos(angleY));
-    SystemMain::getIns()->camera.setY(y + 2.5);
-    SystemMain::getIns()->camera.setZ(z + 1 * sin(angleY));
-    SystemMain::getIns()->camera.setTargetX(x - 10 * cos(angleY + M_PI));
-    SystemMain::getIns()->camera.setTargetY(-0.0);
-    SystemMain::getIns()->camera.setTargetZ(z + 10 * sin(angleY + M_PI));
+    SystemMain::getIns()->game.camera.setX(x - 10 * cos(angleY));
+    SystemMain::getIns()->game.camera.setY(y + 2.5);
+    SystemMain::getIns()->game.camera.setZ(z + 10 * sin(angleY));
+    SystemMain::getIns()->game.camera.setTargetX(x - 10 * cos(angleY + M_PI));
+    SystemMain::getIns()->game.camera.setTargetY(1.0);
+    SystemMain::getIns()->game.camera.setTargetZ(z + 10 * sin(angleY + M_PI));
 
     // ヘッドライト位置の更新
     headLight.setHeadLightPosX(x);
@@ -265,6 +271,8 @@ void Player::update() {
     //カーナビの更新
     carNavi.setPlayerX(FieldX);
     carNavi.setPlayerZ(FieldZ);
+    carNavi.setPlayerPosX(SystemMain::getIns()->game.field.getFieldRemainderX(x));
+    carNavi.setPlayerPosZ(SystemMain::getIns()->game.field.getFieldRemainderZ(z));
 
     //スピードメーターの更新
     speedMeter.setSpeed(speed);

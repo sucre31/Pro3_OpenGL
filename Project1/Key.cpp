@@ -11,6 +11,9 @@ void Key::keyboard(unsigned char key, int x, int y)
 	case 'x':
 		keyXON++;
 		break;
+	case '\033':
+		keyEscON = true;
+		break;
 	}
 
 }
@@ -23,6 +26,9 @@ void Key::keyboardUp(unsigned char key, int x, int y)
 		break;
 	case 'x':
 		keyXON = 0;
+		break;
+	case '\033':
+		keyEscON = false;
 		break;
 	}
 }

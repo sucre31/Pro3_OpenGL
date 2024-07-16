@@ -35,6 +35,9 @@ void Plate::drawFloor(double x, double y, double z, double rate) {
     }glPopMatrix();
 }
 
+/*
+@brief 箱の描画，座標は-xからxのようになるのでサイズは引数の倍になることに注意
+*/
 void Plate::drawBox(double x, double y, double z)
 {
     /* 頂点の座標値 */
