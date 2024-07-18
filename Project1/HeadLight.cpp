@@ -46,9 +46,9 @@ void HeadLight::draw() {
 
 void HeadLight::update() {
 	//ライト位置の更新
-	lightPosition[0] = x - 3.0 * -cos(angle - 180 * (M_PI / 180));
+	lightPosition[0] = x - 18.0 * -cos(angle - 180 * (M_PI / 180));
 	lightPosition[1] = y + 1.3;
-	lightPosition[2] = z - 3.0 * sin(angle - 180 * (M_PI / 180));
+	lightPosition[2] = z - 18.0 * sin(angle - 180 * (M_PI / 180));
 	spotDirrection[0] = 3.0 * -cos(angle - 180 * (M_PI / 180));
 	spotDirrection[1] = -1.0;
 	spotDirrection[2] = 3.0 * sin(angle - 180 * (M_PI / 180));

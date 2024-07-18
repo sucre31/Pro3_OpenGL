@@ -6,6 +6,7 @@
 #include "MapData.h"
 #include "FuelMeter.h"
 #include "SpeedMeter.h"
+#include "Plate.h"
 
 class Player
 {
@@ -26,6 +27,8 @@ public:
 	void setDefY(double yIn) { defY = yIn; }
 	void setDefZ(double zIn) { defZ = zIn; }
 	bool isFuelRemaining() { return (fuel > 0); };
+	void setMapSize() { carNavi.setSquareSize((20 / fieldNumber)); }
+	double fieldNumber;	// マップに渡すだけ
 private:
 	ShiftLever shiftLever;
 	HeadLight headLight;
@@ -34,6 +37,7 @@ private:
 	MapData carNavi;
 	FuelMeter fuelMeter;
 	SpeedMeter speedMeter;
+	Plate plate;
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換

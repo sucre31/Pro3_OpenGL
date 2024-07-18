@@ -8,6 +8,7 @@
 void MapData::draw() {   //”wŒi‚Ì•`‰æ
     // ƒJ[ƒiƒr
     int i, j;
+    double drawSquareSize = (squareSize * fieldRate);
     int loopNum = SystemMain::getIns()->game.field.getFieldGridNumber();       //cE‰¡‚Ìƒ}ƒX‚Ì”
     glColor4f(0.8f, 0.0f, 0.5f, 1.0f);
     for (i = 0; i < loopNum; i++) {
@@ -27,21 +28,24 @@ void MapData::draw() {   //”wŒi‚Ì•`‰æ
                 //glColor4f(0.0f, 0.0f, 0.7f, 1.0f);
                 break;
             }
-            drawSquare((loopNum - i) * squareSize + posX, (loopNum - j) * squareSize + posY);
+            drawSquare((loopNum - i) * drawSquareSize + posX, (loopNum - j) * drawSquareSize + posY);
         }
     }
     for (i = 0; i < loopNum; i++) {
         for (j = 0; j < loopNum; j++) {
             if (i == playerX && j == playerZ) {
                 glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-                Circle2DFill(4.0, (loopNum - i) * squareSize + (posX - playerRemainderX) + squareSize / 2, (loopNum - j) * squareSize + (posY - playerRemainderZ) + squareSize / 2);
+                Circle2DFill(
+                    4.0 * fieldRate,
+                    (loopNum - i) * drawSquareSize + posX - playerRemainderX * fieldRate + drawSquareSize / 2 + drawSquareSize,
+                    (loopNum - j) * drawSquareSize + posY - playerRemainderZ * fieldRate + drawSquareSize / 2 + drawSquareSize);
             }
         }
     }
 }
 
 void MapData::update() {
-
+    
 }
 
 /*

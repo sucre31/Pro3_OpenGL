@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "SceneTitle.h"
 #include "SystemMain.h"
+#include "Texture.h"
 
 SceneTitle::SceneTitle() {
 	cursorPos = 0;
@@ -14,7 +15,7 @@ void SceneTitle::draw() {
 	backGround.draw();
 
 	glViewport(0, 0, SystemMain::getIns()->winW, SystemMain::getIns()->winH); //ビューポートを調整
-	SystemMain::getIns()->view3D();
+	SystemMain::getIns()->view3DForUI();
 	gluLookAt(0.0, 0.0, -5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 	glPushMatrix(); {
 		glTranslatef(2.0, cursorPos, 0.0);
@@ -37,6 +38,7 @@ void SceneTitle::update() {
 			SystemMain::getIns()->changeScene(1);
 			break;
 		case 1:
+			Texture::getIns()->setResolution(1);
 			break;
 		case 2:
 			exit(0);

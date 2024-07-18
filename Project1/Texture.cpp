@@ -3,12 +3,65 @@
 #include "Texture.h"
 
 Texture::Texture() {
+    textureResolution = 0;
     glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-    loadTexture("Assets/texture/Circle.data", SPEEDMETER);
-    loadTexture("Assets/texture/ConcreteWall.data", CONCRETE);
-    loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
-        GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+    if (textureResolution == 0) {
+        loadTexture("Assets/texture/Circle.data", SPEEDMETER);
+        loadTexture("Assets/texture/ConcreteWall.data", CONCRETE);
+        loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
+        loadTexture("Assets/texture/Car.data", CAR);
+        loadTexture("Assets/texture/alpha.data", ALPHA);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CAR]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 7, 0, TEXWIDTH, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[ALPHA]);
+    }
+    else if (textureResolution == 1) {
+        loadTextureMiddle("Assets/texture/middle/Circle.data", SPEEDMETER);
+        loadTextureMiddle("Assets/texture/middle/ConcreteWall.data", CONCRETE);
+        loadTextureMiddle("Assets/texture/middle/ConcreteFloor.data", FLOOR);
+        loadTextureMiddle("Assets/texture/middle/Car.data", CAR);
+        loadTextureMiddle("Assets/texture/middle/alpha.data", ALPHA);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTHMIDDLE * 8, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CONCRETE]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 7, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[ALPHA]);
+    }
+}
+
+void Texture::setResolution(int num) {
+    textureResolution = num;
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+    if (textureResolution == 0) {
+        loadTexture("Assets/texture/Circle.data", SPEEDMETER);
+        loadTexture("Assets/texture/ConcreteWall.data", CONCRETE);
+        loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
+        loadTexture("Assets/texture/Car.data", CAR);
+        loadTexture("Assets/texture/alpha.data", ALPHA);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CAR]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 7, 0, TEXWIDTH, TEXHEIGHT,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[ALPHA]);
+    }
+    else if (textureResolution == 1) {
+        loadTextureMiddle("Assets/texture/middle/Circle.data", SPEEDMETER);
+        loadTextureMiddle("Assets/texture/middle/ConcreteWall.data", CONCRETE);
+        loadTextureMiddle("Assets/texture/middle/ConcreteFloor.data", FLOOR);
+        loadTextureMiddle("Assets/texture/middle/Car.data", CAR);
+        loadTextureMiddle("Assets/texture/middle/alpha.data", ALPHA);
+        gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTHMIDDLE * 8, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CONCRETE]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 7, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[ALPHA]);
+    }
 }
 
 void Texture::initTexture() {
@@ -48,24 +101,72 @@ void Texture::loadTexture(const char texture1[], int Number) {
     }
 }
 
+void Texture::loadTextureMiddle(const char texture1[], int Number) {
+    /* テクスチャの読み込みに使う配列 */
+    FILE* fp;
+
+    /* テクスチャ画像の読み込み */
+    if ((fp = fopen(texture1, "rb")) != NULL) {
+        fread(textureHandleMiddle[Number], sizeof textureHandleMiddle[Number], 1, fp);
+        fclose(fp);
+    }
+    else {
+        perror(texture1);
+    }
+}
+
 void Texture::setTexture(int textureNumber) {
     int i;
     switch (textureNumber) {
     case SPEEDMETER:
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTHSMALL, TEXHEIGHTSMALL,
-            GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[SPEEDMETER]);
+        if (textureResolution == 0) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTH, TEXHEIGHT,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[SPEEDMETER]);
+        }
+        else if (textureResolution == 1) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[SPEEDMETER]);
+        }
         break;
     case CONCRETE:
-        for (i = 0; i < 6; i++) {   // 6面入れ替え
-            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
-                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+        if (textureResolution == 0) {
+            for (i = 0; i < 6; i++) {   // 6面入れ替え
+                glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
+                    GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
+            }
+        }
+        else if (textureResolution == 1) {
+            for (i = 0; i < 6; i++) {   // 6面入れ替え
+                glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * i, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+                    GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CONCRETE]);
+            }
         }
         break;
     case FLOOR:
-        for (i = 0; i < 6; i++) {   // 6面入れ替え
-            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
-                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[FLOOR]);
+        if (textureResolution == 0) {
+            for (i = 0; i < 6; i++) {   // 6面入れ替え
+                glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * i, 0, TEXWIDTH, TEXHEIGHT,
+                    GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[FLOOR]);
+            }
         }
+        else if (textureResolution == 1) {
+            for (i = 0; i < 6; i++) {   // 6面入れ替え
+                glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * i, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+                    GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[FLOOR]);
+            }
+        }
+        break;
+    case CAR:
+        // 7枚目のテクスチャ位置を使う
+        if (textureResolution == 0) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CAR]);
+        }
+        else if (textureResolution == 1) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+        }
+
         break;
     }
 }

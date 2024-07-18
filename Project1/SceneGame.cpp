@@ -8,6 +8,8 @@ SceneGame::SceneGame() {
     player.setDefX(field.getFieldGridSize());
     player.setDefY(field.getFieldGridSize());
     player.setDefZ(field.getFieldGridSize());
+    player.fieldNumber = field.getFieldGridNumber();
+    player.setMapSize();
 }
 
 void SceneGame::draw() {
@@ -36,7 +38,7 @@ void SceneGame::draw() {
     SystemMain::getIns()->view2D();                   // インタフェース用背景
     info.draw();
 
-    SystemMain::getIns()->view3D();
+    SystemMain::getIns()->view3DForUI();
     GLfloat lightPosition2[4] = { 50.0, 100.0, 100.0, 0.0 }; //光源の位置
     GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
     GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光

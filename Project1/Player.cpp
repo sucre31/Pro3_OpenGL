@@ -4,8 +4,9 @@
 #include <math.h>
 #include "Player.h"
 #include "SystemMain.h"
+#include "Texture.h"
 
-Player::Player() : x(0.0), y(0.0), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(1.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(2.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
     lightSwitch = true;
     lightChanged = false;
     inTheWall = false;
@@ -38,12 +39,23 @@ void Player::draw() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
         GLfloat mat0shine[] = { 27.89743616 };//真鍮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-        GLfloat materialEmission[] = { 0.0, 0.0, 0.0, 1.0 };
+        GLfloat materialEmission[] = { 0.1, 0.1, 0.1, 1.0 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
         //自機の描画
         glTranslatef(x, y, z); //位置変数をもとに移動
-        glRotatef(angleY * (180 / M_PI) + 1.5 * handleAngle * (180 / M_PI), 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転 handleAngleも考慮
-        glutSolidTeapot(1.0);            //自機はティーポット(笑)
+        glRotatef(angleY * (180 / M_PI) - 90, 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転
+        glRotatef(0.3 * handleAngle * (180 / M_PI), 0.0, 0.0, 1.0);  //handleAngleも考慮
+        glPushMatrix(); {//モデルはコストが高いのでテクスチャで代用
+            glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
+            glEnable(GL_ALPHA_TEST);
+            glTranslated(0.0, 1.5, 6.0);
+            glRotatef(-90, 0.0, 0.0, 1.0);  //Z軸まわりに-90°回転
+            glScaled(2.0, 2.0, 0.1);
+            //Texture::getIns()->setTexture(Texture::getIns()->CAR); //7枚目のテクスチャは更新しない
+            plate.drawBoxPlayer(1.0, 1.0, 1.0);
+            glDisable(GL_TEXTURE_2D); // テクスチャマッピング終了
+            glDisable(GL_ALPHA_TEST);
+        }glPopMatrix();
     }glPopMatrix();
 
     headLight.draw();
@@ -115,7 +127,7 @@ void Player::update() {
         handleAngle -= handling;
     }
     else {              // ハンドル持ってない (左右同時押しこれでいいかは検討)
-        handleAngle -= (5.0 * handleAngle) * M_PI / 360;
+        handleAngle -= (1.0 * handleAngle) * M_PI / 360;
     }
     if (handleAngle > handleAngleMax) {
         handleAngle = handleAngleMax;
@@ -218,16 +230,16 @@ void Player::update() {
             velY -= 0.1;
             y += velY;
         }
-        else if (y > 0) {
+        else if (y > 0.5) {
             velY -= 0.1;
             y += velY; 
-            if (y < 0) {
-                y = 0;
+            if (y < 0.5) {
+                y = 0.5;
             }
         }
         else {
             // -0.5までなら落ちない
-            y = 0;
+            y = 0.5;
             velY = 0;
         }
 
@@ -246,9 +258,9 @@ void Player::update() {
     FieldZ = SystemMain::getIns()->game.field.getFieldZ(z);
 
     //カメラ位置の更新
-    SystemMain::getIns()->game.camera.setX(x - 10 * cos(angleY));
-    SystemMain::getIns()->game.camera.setY(y + 2.5);
-    SystemMain::getIns()->game.camera.setZ(z + 10 * sin(angleY));
+    SystemMain::getIns()->game.camera.setX(x - 17 * cos(angleY));
+    SystemMain::getIns()->game.camera.setY(y + 3.5);
+    SystemMain::getIns()->game.camera.setZ(z + 17 * sin(angleY));
     SystemMain::getIns()->game.camera.setTargetX(x - 10 * cos(angleY + M_PI));
     SystemMain::getIns()->game.camera.setTargetY(1.0);
     SystemMain::getIns()->game.camera.setTargetZ(z + 10 * sin(angleY + M_PI));

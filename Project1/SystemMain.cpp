@@ -93,7 +93,7 @@ void SystemMain::reshapeFunc(int w, int h) // ウインドウサイズ変更時に呼び出され
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(30.0, (double)w / h, 1.0, 100.0); // 透視投影
+    gluPerspective(30.0, (double)w / h, 10.0, 100.0); // 透視投影
     winH = h;
     winW = w;
 }
@@ -112,11 +112,22 @@ void SystemMain::view3D() {
     glEnable(GL_LIGHTING); // ライティングを有効化
     glMatrixMode(GL_PROJECTION);// 射影変換行列設定
     glLoadIdentity();
+    gluPerspective(30.0, (double)winW / winH, 8.5, 1000.0); // 透視投影
+    glMatrixMode(GL_MODELVIEW);// モデルビュー変換行列設定
+    glLoadIdentity();// 単位行列を設定
+    glEnable(GL_DEPTH_TEST); // 隠面消去を有効
+}
+
+void SystemMain::view3DForUI() {
+    glEnable(GL_LIGHTING); // ライティングを有効化
+    glMatrixMode(GL_PROJECTION);// 射影変換行列設定
+    glLoadIdentity();
     gluPerspective(30.0, (double)winW / winH, 1.0, 1000.0); // 透視投影
     glMatrixMode(GL_MODELVIEW);// モデルビュー変換行列設定
     glLoadIdentity();// 単位行列を設定
     glEnable(GL_DEPTH_TEST); // 隠面消去を有効
 }
+
 
 void SystemMain::keyboardCall(unsigned char key, int x, int y) {
     this->key.keyboard(key, x, y);

@@ -7,5 +7,6 @@ public:
 	void draw();
 	void drawFloor(double, double, double, double);
 	void drawBox(double, double, double);
+	void drawBoxPlayer(double, double, double);
 };
 

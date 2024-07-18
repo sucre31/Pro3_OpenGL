@@ -54,11 +54,11 @@ void SpeedMeter::draw() {
 		glEnable(GL_TEXTURE_2D);
 		glNormal3d(0.0, 0.0, 1.0);	//法線
 		glBegin(GL_QUADS);
-		glTexCoord2d(0.0, 0.5); //頂点のテクスチャ座標
+		glTexCoord2d(0.0, 1.0); //頂点のテクスチャ座標
 		glVertex3d(-size, -size, 0.0);
-		glTexCoord2d(0.0625, 0.5);
+		glTexCoord2d(0.125, 1.0);
 		glVertex3d(size, -size, 0.0);
-		glTexCoord2d(0.0625, 0.0);
+		glTexCoord2d(0.125, 0.0);
 		glVertex3d(size, size, 0.0);
 		glTexCoord2d(0.0, 0.0);
 		glVertex3d(-size, size, 0.0);

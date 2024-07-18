@@ -108,13 +108,13 @@ void FieldData::draw() {
 
             if (getField(i, j) == 0) {
                 glPushMatrix(); {
-                    glTranslatef((i * gridSize), + 1.0, (j * gridSize));
+                    glTranslatef((i * gridSize), + 3.5, (j * gridSize));
                     plate.drawBox(gridSize / 2.0, 3 * gridSize / 2, gridSize/ 2.0);             // ï«
                 }glPopMatrix();
             }
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
             glPushMatrix(); {
-                glTranslatef((i * gridSize), 2 * gridSize + 1.0, (j * gridSize));
+                glTranslatef((i * gridSize), 2 * gridSize + 3.5, (j * gridSize));
                 plate.drawBox(gridSize / 2.0, gridSize / 2.0, gridSize / 2.0);             // ìVà‰
             }glPopMatrix();
             glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
@@ -130,7 +130,7 @@ void FieldData::draw() {
             glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             if (getField(i, j) != 0) { // è∞
                 glPushMatrix(); {
-                    glTranslatef((i * gridSize), -gridSize + 1.0, (j * gridSize));
+                    glTranslatef((i * gridSize), -gridSize + 3.5, (j * gridSize));
                     plate.drawBox(gridSize / 2.0, gridSize / 2.0, gridSize / 2.0);            
                 }glPopMatrix();
             }

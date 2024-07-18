@@ -25,6 +25,7 @@ public:
 	static void specialKeyUp(int, int, int);
 	void view2D();					// •`‰æ‚ð2D‚É
 	void view3D();					// •`‰æ‚ð3D‚É
+	void view3DForUI();					// •`‰æ‚ð3D‚É
 	void changeScene(int);
 private:
 	void reshapeFunc(int, int);
