@@ -11,6 +11,7 @@ Texture::Texture() {
         loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
         loadTexture("Assets/texture/Car.data", CAR);
         loadTexture("Assets/texture/alpha.data", ALPHA);
+        loadTexture("Assets/texture/Bike.data", BIKE);
         gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
@@ -24,10 +25,11 @@ Texture::Texture() {
         loadTextureMiddle("Assets/texture/middle/ConcreteFloor.data", FLOOR);
         loadTextureMiddle("Assets/texture/middle/Car.data", CAR);
         loadTextureMiddle("Assets/texture/middle/alpha.data", ALPHA);
+        loadTextureMiddle("Assets/texture/middle/Bike.data", BIKE);
         gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTHMIDDLE * 8, TEXHEIGHTMIDDLE,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CONCRETE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
-            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[BIKE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 7, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[ALPHA]);
     }
@@ -42,6 +44,7 @@ void Texture::setResolution(int num) {
         loadTexture("Assets/texture/ConcreteFloor.data", FLOOR);
         loadTexture("Assets/texture/Car.data", CAR);
         loadTexture("Assets/texture/alpha.data", ALPHA);
+        loadTexture("Assets/texture/Bike.data", BIKE);
         gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTH * 8, TEXHEIGHT,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[CONCRETE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
@@ -55,10 +58,11 @@ void Texture::setResolution(int num) {
         loadTextureMiddle("Assets/texture/middle/ConcreteFloor.data", FLOOR);
         loadTextureMiddle("Assets/texture/middle/Car.data", CAR);
         loadTextureMiddle("Assets/texture/middle/alpha.data", ALPHA);
+        loadTextureMiddle("Assets/texture/middle/Bike.data", BIKE);
         gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGBA, TEXWIDTHMIDDLE * 8, TEXHEIGHTMIDDLE,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CONCRETE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
-            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+            GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[BIKE]);
         glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 7, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
             GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[ALPHA]);
     }
@@ -165,6 +169,18 @@ void Texture::setTexture(int textureNumber) {
         else if (textureResolution == 1) {
             glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
                 GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[CAR]);
+        }
+
+        break;
+    case BIKE:
+        // 7枚目のテクスチャ位置を使う
+        if (textureResolution == 0) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTH * 6, 0, TEXWIDTH, TEXHEIGHT,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandle[BIKE]);
+        }
+        else if (textureResolution == 1) {
+            glTexSubImage2D(GL_TEXTURE_2D, 0, TEXWIDTHMIDDLE * 6, 0, TEXWIDTHMIDDLE, TEXHEIGHTMIDDLE,
+                GL_RGBA, GL_UNSIGNED_BYTE, textureHandleMiddle[BIKE]);
         }
 
         break;

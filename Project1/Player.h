@@ -56,6 +56,7 @@ private:
 	double angleY;			// Y軸の回転量(ラジアン)
 	double handleAngle;		// ハンドルの回転量
 	double handleAngleMax;	// ハンドルの最大回転角
+	double bodyAngle;		// 車体の揺れ
 	double fuel, fuelMax;
 	void drawHandle();
 };

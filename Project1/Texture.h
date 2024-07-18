@@ -13,7 +13,8 @@ public:
 		CONCRETECUBE,
 		FLOOR,
 		CAR,
-		ALPHA
+		ALPHA,
+		BIKE
 	};
 	void initTexture();
 	void loadTexture(const char texture1[], int Number);
@@ -32,8 +33,8 @@ private:
 		{ 0.0, 0.0, 1.0, 0.0 },
 		{ 0.0, 0.0, 0.0, 1.0 },
 	};
-	GLubyte *textureHandle[6][TEXHEIGHT][TEXWIDTH][4];			// 動的に確保するように変更したい
-	GLubyte* textureHandleMiddle[6][TEXHEIGHTMIDDLE][TEXWIDTHMIDDLE][4];
+	GLubyte *textureHandle[7][TEXHEIGHT][TEXWIDTH][4];			// 動的に確保するように変更したい
+	GLubyte* textureHandleMiddle[7][TEXHEIGHTMIDDLE][TEXWIDTHMIDDLE][4];
 	GLubyte* loadPng(const char fp[]);
 	//GLubyte texture[TEXHEIGHT][TEXWIDTH][4];
 };

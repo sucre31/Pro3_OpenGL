@@ -38,7 +38,7 @@ void HeadLight::draw() {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
-		glTranslatef(lightPosition[0], lightPosition[1] + 0.5, lightPosition[2]);
+		glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
 		glutSolidSphere(0.10, 15, 15);              // 球
 	}glPopMatrix();
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
@@ -46,9 +46,9 @@ void HeadLight::draw() {
 
 void HeadLight::update() {
 	//ライト位置の更新
-	lightPosition[0] = x - 18.0 * -cos(angle - 180 * (M_PI / 180));
-	lightPosition[1] = y + 1.3;
-	lightPosition[2] = z - 18.0 * sin(angle - 180 * (M_PI / 180));
+	lightPosition[0] = x - 8.0 * -cos(angle - 180 * (M_PI / 180));
+	lightPosition[1] = y + 1.3 + 1.2;
+	lightPosition[2] = z - 8.0 * sin(angle - 180 * (M_PI / 180));
 	spotDirrection[0] = 3.0 * -cos(angle - 180 * (M_PI / 180));
 	spotDirrection[1] = -1.0;
 	spotDirrection[2] = 3.0 * sin(angle - 180 * (M_PI / 180));

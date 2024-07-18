@@ -39,12 +39,12 @@ void Player::draw() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
         GLfloat mat0shine[] = { 27.89743616 };//真鍮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-        GLfloat materialEmission[] = { 0.1, 0.1, 0.1, 1.0 };
+        //GLfloat materialEmission[] = { 0.2, 0.2, 0.2, 1.0 };
+        GLfloat materialEmission[] = { 0.6, 0.6, 0.6, 1.0 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
         //自機の描画
         glTranslatef(x, y, z); //位置変数をもとに移動
         glRotatef(angleY * (180 / M_PI) - 90, 0.0, 1.0, 0.0);  //Y軸まわりにangleY(ラジアン)回転
-        glRotatef(0.3 * handleAngle * (180 / M_PI), 0.0, 0.0, 1.0);  //handleAngleも考慮
         glPushMatrix(); {//モデルはコストが高いのでテクスチャで代用
             glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
             glEnable(GL_ALPHA_TEST);
@@ -52,7 +52,10 @@ void Player::draw() {
             glRotatef(-90, 0.0, 0.0, 1.0);  //Z軸まわりに-90°回転
             glScaled(2.0, 2.0, 0.1);
             //Texture::getIns()->setTexture(Texture::getIns()->CAR); //7枚目のテクスチャは更新しない
-            plate.drawBoxPlayer(1.0, 1.0, 1.0);
+            glPushMatrix();
+            glRotatef(-bodyAngle, 0.0, 0.0, 1.0);  // handleAngleも考慮
+            plate.drawBoxPlayer(1.0, 1.0, 0.1);
+            glPopMatrix();
             glDisable(GL_TEXTURE_2D); // テクスチャマッピング終了
             glDisable(GL_ALPHA_TEST);
         }glPopMatrix();
@@ -211,7 +214,7 @@ void Player::update() {
     }
     fuel -= power; // エンジン切らないと燃料減る あとライトとか
     if (fuel < 0 ) {
-        fuel = 0;
+        fuel = 100;
     }
 
     //y方向の更新
@@ -252,6 +255,10 @@ void Player::update() {
         velY = 0;
         angleY = -M_PI / 2;
     }
+
+    //車体の揺れ
+    bodyAngle = 0.4 * abs(speed) * handleAngle * (180 / M_PI);
+    //bodyAngle = -2.4 * abs(speed) * handleAngle * (180 / M_PI); //バイク用
 
     //グリッド座標を更新
     FieldX = SystemMain::getIns()->game.field.getFieldX(x);
