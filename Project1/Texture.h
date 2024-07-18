@@ -14,7 +14,7 @@ public:
 		FLOOR,
 		CAR,
 		ALPHA,
-		BIKE
+		CARBRAKE
 	};
 	void initTexture();
 	void loadTexture(const char texture1[], int Number);

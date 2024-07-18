@@ -143,6 +143,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneGame.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
+    <ClCompile Include="SegmentDisplay.cpp" />
     <ClCompile Include="ShiftLever.cpp" />
     <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="Sound.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="SegmentDisplay.h" />
     <ClInclude Include="ShiftLever.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Sound.h" />

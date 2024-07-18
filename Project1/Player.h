@@ -7,6 +7,7 @@
 #include "FuelMeter.h"
 #include "SpeedMeter.h"
 #include "Plate.h"
+#include "SegmentDisplay.h"
 
 class Player
 {
@@ -38,6 +39,7 @@ private:
 	FuelMeter fuelMeter;
 	SpeedMeter speedMeter;
 	Plate plate;
+	SegmentDisplay segment;
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
@@ -59,5 +61,6 @@ private:
 	double bodyAngle;		// 車体の揺れ
 	double fuel, fuelMax;
 	void drawHandle();
+	bool brakeValid;		// ブレーキ踏んでるかs
 };
 

@@ -11,6 +11,7 @@ SpeedMeter::SpeedMeter() {
 
 void SpeedMeter::draw() {
 	double tmpSpeed;	//スピードをマイナスにしないように
+	glPushMatrix();
 	glPushMatrix(); {       //スピードメーター
 		GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//赤
 		GLfloat mat0diff[] = { 0.60754,  0.20754, 0.20754, 1.0 };
@@ -66,6 +67,7 @@ void SpeedMeter::draw() {
 		glDisable(GL_TEXTURE_2D);
 	}glPopMatrix();
 	glDisable(GL_ALPHA_TEST);
+	glPopMatrix();
 }
 
 void SpeedMeter::update() {

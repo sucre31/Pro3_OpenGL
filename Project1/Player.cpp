@@ -10,6 +10,7 @@ Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.
     lightSwitch = true;
     lightChanged = false;
     inTheWall = false;
+    brakeValid = false;
     fuel = 200;
     fuelMax = 200;
     fuelMeter.setFuel(fuel);
@@ -39,8 +40,7 @@ void Player::draw() {
         glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
         GLfloat mat0shine[] = { 27.89743616 };//真鍮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
-        //GLfloat materialEmission[] = { 0.2, 0.2, 0.2, 1.0 };
-        GLfloat materialEmission[] = { 0.6, 0.6, 0.6, 1.0 };
+        GLfloat materialEmission[] = { 0.2, 0.2, 0.2, 1.0 };
         glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, materialEmission);
         //自機の描画
         glTranslatef(x, y, z); //位置変数をもとに移動
@@ -51,7 +51,12 @@ void Player::draw() {
             glTranslated(0.0, 1.5, 6.0);
             glRotatef(-90, 0.0, 0.0, 1.0);  //Z軸まわりに-90°回転
             glScaled(2.0, 2.0, 0.1);
-            //Texture::getIns()->setTexture(Texture::getIns()->CAR); //7枚目のテクスチャは更新しない
+            if (brakeValid) {
+                Texture::getIns()->setTexture(Texture::getIns()->CARBRAKE); //7枚目のテクスチャは更新しない
+            }
+            else {
+                Texture::getIns()->setTexture(Texture::getIns()->CAR); //7枚目のテクスチャは更新しない
+            }
             glPushMatrix();
             glRotatef(-bodyAngle, 0.0, 0.0, 1.0);  // handleAngleも考慮
             plate.drawBoxPlayer(1.0, 1.0, 0.1);
@@ -70,6 +75,7 @@ void Player::drawInfo() {
     pedalAccel.draw();
     pedalBrake.draw();
     speedMeter.draw();
+    segment.draw();
 }
 
 void Player::drawInfo2D() {
@@ -146,6 +152,7 @@ void Player::update() {
         }
     }
     if (SystemMain::getIns()->key.getKeyDownON()) {     // ブレーキ
+        brakeValid = true;
         if (speed < 0) {
             speed += brake;
             if (speed > 0) {
@@ -160,6 +167,7 @@ void Player::update() {
         }
     } 
     else {
+        brakeValid = false;
         //speed += 0.001;             //クリープ現象
     }
     if (speed < 0) {//何もしなくても速度は減る
@@ -299,4 +307,10 @@ void Player::update() {
 
     //燃料の更新
     fuelMeter.setFuel(fuel);
+
+    // 7セグの更新
+    int i;
+    for (i = 0; i < 8; i++) {
+        segment.setLampState(i, ((int)(speed * pow(10, i)) % 10));
+    }
 }
