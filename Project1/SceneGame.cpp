@@ -1,5 +1,6 @@
 #include "SceneGame.h"
 #include "SystemMain.h"
+#include "Sound.h"
 
 SceneGame::SceneGame() {
     player.setX(field.getFieldGridSize());

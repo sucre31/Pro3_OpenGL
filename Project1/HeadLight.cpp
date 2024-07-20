@@ -39,7 +39,7 @@ void HeadLight::draw() {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
 		glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
-		glutSolidSphere(0.10, 15, 15);              // ‹…
+		//glutSolidSphere(0.10, 15, 15);              // ‹…
 	}glPopMatrix();
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
 }

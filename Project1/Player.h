@@ -40,12 +40,14 @@ private:
 	SpeedMeter speedMeter;
 	Plate plate;
 	SegmentDisplay segment;
+	double timer;			//経過時間を保持
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
 	bool lightSwitch;		// ヘッドライトをつけるか
 	bool lightChanged;		// ほんとはキー入力側で対応すべき
 	bool inTheWall; //あとでけす
+	bool soundChange;
 	double power;			// 電力
 	double accel;			// アクセル(加速度)
 	double brake;			// ブレーキ(加速度)

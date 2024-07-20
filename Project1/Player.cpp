@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "SystemMain.h"
 #include "Texture.h"
+#include "Sound.h"
 
 Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(2.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
     lightSwitch = true;
@@ -19,12 +20,12 @@ Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.
     speedMeter.setSpeed(speed);
     headLight.setLightNumber(1);
     pedalAccel.setCheckKey(0);
-    pedalAccel.setX(-1.0);
+    pedalAccel.setX(-0.7);
     pedalAccel.setY(-2.6f);
     pedalAccel.setScaleX(0.3);
     pedalAccel.setScaleY(0.8);
     pedalBrake.setCheckKey(1);
-    pedalBrake.setX(1.0);
+    pedalBrake.setX(1.3);
     pedalBrake.setY(-2.6f);
     pedalBrake.setScaleX(0.35);
     pedalBrake.setScaleY(0.5);
@@ -94,6 +95,7 @@ void Player::drawHandle() {
         GLfloat mat0shine[] = { 27.89743616 };//黒皮
         glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
         //ハンドルの描画
+        glTranslated(0.3, 0.0, 0.0);
         glPushMatrix(); {
             //glTranslatef(x - 5 * cos(angleY), y + 0.5, z + 5 * sin(angleY)); //位置変数をもとに移動
             glTranslatef(0.0f, -2.1f, 0.0f);
@@ -199,11 +201,35 @@ void Player::update() {
     if (speed > 0 || true) {
         if (shift == 0) {
             angleY += speed * handleAngle;
+            //衝突をここで判定
+            double tmpX, tmpZ;
+            int tmpGridX, tmpGridZ;
+            tmpX = x + speed * cos(angleY);
+            tmpZ = z + speed * -sin(angleY);
+            tmpGridX = SystemMain::getIns()->game.field.getFieldX(tmpX);
+            tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
+            if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
+                //衝突
+                double e = 0.2; //反発係数
+                speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
+            }
             x += speed * cos(angleY);
             z += speed * -sin(angleY);
         } 
         else if (shift == 1){
             angleY -= speed * handleAngle;
+            //衝突をここで判定
+            double tmpX, tmpZ;
+            int tmpGridX, tmpGridZ;
+            tmpX = x + speed * cos(angleY);
+            tmpZ = z + speed * -sin(angleY);
+            tmpGridX = SystemMain::getIns()->game.field.getFieldX(tmpX);
+            tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
+            if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
+                //衝突
+                double e = 0.2; //反発係数
+                speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
+            }
             x -= speed * cos(angleY);
             z -= speed * -sin(angleY);
         }
@@ -212,6 +238,7 @@ void Player::update() {
         if (!lightChanged) {
             lightSwitch = !lightSwitch;
             lightChanged = true;        //連続で切り替わらないようにする
+            Sound::getIns()->playSE2();
         }
     }
     else {
@@ -309,8 +336,111 @@ void Player::update() {
     fuelMeter.setFuel(fuel);
 
     // 7セグの更新
-    int i;
-    for (i = 0; i < 8; i++) {
-        segment.setLampState(i, ((int)(speed * pow(10, i)) % 10));
+    //タイマー
+    timer = glutGet(GLUT_ELAPSED_TIME);
+    int second, minute, conma;
+    conma = timer / 10;
+    second = timer / 1000;
+    minute = second / 60;
+    second = second % 60;
+    minute = minute % 60;
+    segment.setLampTimeState(5, conma % 10);
+    segment.setLampTimeState(4, (conma / 10) % 10);
+    segment.setLampTimeState(3, second % 10);
+    segment.setLampTimeState(2, (second / 10) % 10);
+    segment.setLampTimeState(1, minute % 10);
+    segment.setLampTimeState(0, (minute / 10) % 10);
+
+
+
+    /*
+    ここから下はサウンド関連の処理 かなり無理矢理
+    再生のたびに動作が停止する
+    */
+
+    static int brank = 6831;
+    static int brankSE1 = 2631;
+    static int brankSE4 = 3631;
+    static int brankSE5 = 21631;
+    static bool ValidSE1 = false; //減速
+    static bool ValidSE3 = false; //アイドル
+    static bool ValidSE4 = false; //加速中
+    static bool ValidSE5 = false; //走行中
+    static int tmpSound = 0;
+    static int currentSound = -1;
+    static double timerForSound;
+    
+    segment.setLampBState(0, currentSound);
+    segment.setLampBState(1, tmpSound);
+
+    if (currentSound != tmpSound) {
+        //前の音を止める
+        //Sound::getIns()->pauseSE(tmpSound);
+        tmpSound = currentSound;
+        soundChange = true;
+        timerForSound = glutGet(GLUT_ELAPSED_TIME);
+    }
+    else {
+        soundChange = false;
+    }
+
+    if ((currentSound == 1 || currentSound == 2 || currentSound == 4 )&& SystemMain::getIns()->key.getKeyDownON() && speed > 0) { //走行中のブレーキ
+        currentSound = 4;
+        Sound::getIns()->pauseSE4();
+        Sound::getIns()->pauseSE5();
+        if ((timer - timerForSound) - brankSE1 * (int)((timer - timerForSound) / brankSE1) < 1000) {  // 音のループを無理矢理ここでやる
+            if (!ValidSE1) {
+                Sound::getIns()->playSE1();
+                ValidSE1 = true;
+            }
+        }
+        else {
+            ValidSE1 = false;
+        }
+    }
+    else {
+        if (speed > 0.6) {
+            currentSound = 2;
+            Sound::getIns()->pauseSE4();
+            Sound::getIns()->pauseSE1();
+            if ((timer - timerForSound) - brankSE5 * (int)((timer - timerForSound) / brankSE5) < 1000) {  // 音のループを無理矢理ここでやる
+                if (!ValidSE5) {
+                    Sound::getIns()->playSE5();
+                    ValidSE5 = true;
+                }
+            }
+            else {
+                ValidSE5 = false;
+            }
+        }
+        else if (speed > 0) {
+            currentSound = 1;
+            Sound::getIns()->pauseSE1();
+            Sound::getIns()->pauseSE5();
+            if ((timer - timerForSound) - brankSE4 * (int)((timer - timerForSound) / brankSE4) < 1000) {
+                if (!ValidSE4) {
+                    Sound::getIns()->playSE4();
+                    ValidSE4 = true;
+                }
+            }
+            else {
+                ValidSE4 = false;
+            }
+        }
+        else {
+            currentSound = 0;
+            Sound::getIns()->pauseSE1();
+            Sound::getIns()->pauseSE4();
+            Sound::getIns()->pauseSE5();
+            if ((timer - timerForSound) - brank * (int)((timer - timerForSound) / brank) < 1000) {
+                if (!ValidSE3) {
+                    Sound::getIns()->playSE3();
+                    ValidSE3 = true;
+                }
+            }
+            else {
+                ValidSE3 = false;
+            }
+        }
     }
 }

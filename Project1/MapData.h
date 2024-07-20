@@ -16,7 +16,7 @@ public:
 private:
 	const double squareSize = 8;
 	double fieldRate;
-	const double posX = 200, posY = 550;
+	const double posX = 190, posY = 545;
 	int playerX, playerZ;
 	double playerRemainderX, playerRemainderZ;	//ƒOƒŠƒbƒh‚É’¼‚·‚Æ‚«‚Ì‚ ‚Ü‚è
 };

@@ -1,12 +1,15 @@
+#include <windows.h>
 #include <stdlib.h>
 #include "SceneTitle.h"
 #include "SystemMain.h"
 #include "Texture.h"
+#include "Sound.h"
 
 SceneTitle::SceneTitle() {
 	cursorPos = 0;
 	keyPushedDown = false;
 	keyPushedUp = false;
+	Sound::getIns()->playSubBGM();
 }
 
 void SceneTitle::draw() {
@@ -17,6 +20,14 @@ void SceneTitle::draw() {
 	glViewport(0, 0, SystemMain::getIns()->winW, SystemMain::getIns()->winH); //ƒrƒ…[ƒ|[ƒg‚ð’²®
 	SystemMain::getIns()->view3DForUI();
 	gluLookAt(0.0, 0.0, -5.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	GLfloat mat0ambi[] = { 0.329412,  0.223529, 0.027451, 1.0 };//^èJ
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, mat0ambi); //ŠÂ‹«Œõ‚Ì”½ŽË—¦‚ðÝ’è
+	GLfloat mat0diff[] = { 0.780392,  0.568627, 0.113725, 1.0 };//^èJ
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, mat0diff); //ŠgŽUŒõ‚Ì”½ŽË—¦‚ðÝ’è
+	GLfloat mat0spec[] = { 0.992157,  0.941176, 0.807843, 1.0 };//^èJ
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //‹¾–ÊŒõ‚Ì”½ŽË—¦‚ðÝ’è
+	GLfloat mat0shine[] = { 27.89743616 };//^èJ
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 	glPushMatrix(); {
 		glTranslatef(2.0, cursorPos, 0.0);
 		glRotated(rota, 0.0, 1.0, 0.0);
@@ -29,6 +40,28 @@ void SceneTitle::draw() {
 			glutSolidCube(0.3);
 		}glPopMatrix();
 	}
+	
+	// •¶Žš—ñ‚Ì•`‰æ
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glRasterPos3f(-0.8f, -0.015f, -3.0f);
+	const char* strA = "MAIN GAME";
+	while (*strA) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *strA);
+		++strA;
+	}
+	glRasterPos3f(-0.8f, -0.315f, -3.0f);
+	const char* strB = "OPTION";
+	while (*strB) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *strB);
+		++strB;
+	}
+	glRasterPos3f(-0.8f, -0.615f, -3.0f);
+	const char* strC = "QUIT";
+	while (*strC) {
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *strC);
+		++strC;
+	}
 }
 
 void SceneTitle::update() {
@@ -36,6 +69,8 @@ void SceneTitle::update() {
 		switch (select) {
 		case 0:
 			SystemMain::getIns()->changeScene(1);
+			Sound::getIns()->pauseSub();
+			Sound::getIns()->playMainBGM();
 			break;
 		case 1:
 			Texture::getIns()->setResolution(1);
@@ -49,6 +84,7 @@ void SceneTitle::update() {
 		if (!keyPushedDown) {
 			select += 1;
 			keyPushedDown = true;
+			Sound::getIns()->playSE6();
 		}
 	}
 	else {
@@ -58,6 +94,7 @@ void SceneTitle::update() {
 		if (!keyPushedUp) {
 			select += 2;
 			keyPushedUp = true;
+			Sound::getIns()->playSE6();
 		}
 	}
 	else {

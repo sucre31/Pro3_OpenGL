@@ -6,12 +6,24 @@ SegmentDisplay::SegmentDisplay() {
 	for (i = 0; i < amountOfLamp; i++) {
 		setLampState(i, i);
 	}
+	for (i = 0; i < amountOfLampB; i++) {
+		setLampBState(i, i);
+	}
+	for (i = 0; i < amountOfLampTime; i++) {
+		setLampTimeState(i, i);
+	}
 }
 
 void SegmentDisplay::draw() {
 	int i;
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < amountOfLamp; i++) {
 		draw7Seg(10.0 + 0.5 * i, -7.0, lampState[i]);
+	}
+	for (i = 0; i < amountOfLampB; i++) {
+		draw7Seg(10.0 + 0.5 * i, -5.0, lampBState[i]);
+	}
+	for (i = 0; i < amountOfLampTime; i++) {
+		draw7Seg(-13.5 + 0.5 * i, -5.0, lampTimeState[i]);
 	}
 }
 
@@ -54,6 +66,83 @@ void SegmentDisplay::setLampState(int lampNum, int setNum) {
 			lampState[lampNum] = 0b1111101;
 			break;
 		}
+	}
+}
+
+void SegmentDisplay::setLampBState(int lampNum, int setNum) {
+	if (lampNum < amountOfLampB) {
+		switch (setNum) {
+		case 0:
+			lampBState[lampNum] = 0b0111111;
+			break;
+		case 1:
+			lampBState[lampNum] = 0b0011000;
+			break;
+		case 2:
+			lampBState[lampNum] = 0b1110110;
+			break;
+		case 3:
+			lampBState[lampNum] = 0b1111100;
+			break;
+		case 4:
+			lampBState[lampNum] = 0b1011001;
+			break;
+		case 5:
+			lampBState[lampNum] = 0b1101101;
+			break;
+		case 6:
+			lampBState[lampNum] = 0b1101111;
+			break;
+		case 7:
+			lampBState[lampNum] = 0b0111000;
+			break;
+		case 8:
+			lampBState[lampNum] = 0b1111111;
+			break;
+		case 9:
+			lampBState[lampNum] = 0b1111101;
+			break;
+		}
+	}
+}
+
+
+void SegmentDisplay::setLampTimeState(int lampNum, int setNum) {
+	int tmpState;
+	if (lampNum < amountOfLampTime) {
+		switch (setNum) {
+		case 0:
+			tmpState = 0b0111111;
+			break;
+		case 1:
+			tmpState = 0b0011000;
+			break;
+		case 2:
+			tmpState = 0b1110110;
+			break;
+		case 3:
+			tmpState = 0b1111100;
+			break;
+		case 4:
+			tmpState = 0b1011001;
+			break;
+		case 5:
+			tmpState = 0b1101101;
+			break;
+		case 6:
+			tmpState = 0b1101111;
+			break;
+		case 7:
+			tmpState = 0b0111000;
+			break;
+		case 8:
+			tmpState = 0b1111111;
+			break;
+		case 9:
+			tmpState = 0b1111101;
+			break;
+		}
+		lampTimeState[lampNum] = tmpState;
 	}
 }
 
