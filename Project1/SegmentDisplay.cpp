@@ -12,18 +12,44 @@ SegmentDisplay::SegmentDisplay() {
 	for (i = 0; i < amountOfLampTime; i++) {
 		setLampTimeState(i, i);
 	}
+	//fuel
+	lampCharBState[0] = 0b1100011;
+	lampCharBState[1] = 0b0011111;
+	lampCharBState[2] = 0b1100111;
+	lampCharBState[3] = 0b0000111;
+	//cash
+	lampCharCState[0] = 0b0100111;
+	lampCharCState[1] = 0b1111011;
+	lampCharCState[2] = 0b1101101;
+	lampCharCState[3] = 0b1011011;
+	//LEVEL
+	lampCharAState[0] = 0b0000111;
+	lampCharAState[1] = 0b1100111;
+	lampCharAState[2] = 0b0011111;
+	lampCharAState[3] = 0b1100111;
+	lampCharAState[4] = 0b0000111;
+	lampCharAState[5] = 0b0011000;
 }
 
 void SegmentDisplay::draw() {
 	int i;
 	for (i = 0; i < amountOfLamp; i++) {
-		draw7Seg(10.0 + 0.5 * i, -7.0, lampState[i]);
+		draw7Seg(10.0 + 0.5 * i, -7.0, lampState[i], 2);
 	}
-	for (i = 0; i < amountOfLampB; i++) {
-		draw7Seg(10.0 + 0.5 * i, -5.0, lampBState[i]);
+	//for (i = 0; i < amountOfLampB; i++) {
+	//	draw7Seg(10.0 + 0.5 * i, -5.0, lampBState[i]);
+	//}
+	for (i = 0; i < amountOfLampTime; i++) { // Time
+		draw7Seg(-13.75 + 0.5 * i, -5.0, lampTimeState[i], 3);
 	}
-	for (i = 0; i < amountOfLampTime; i++) {
-		draw7Seg(-13.5 + 0.5 * i, -5.0, lampTimeState[i]);
+	for (i = 0; i < amountOfLampCharA; i++) { // Level
+		draw7Seg(-13.75 + 0.5 * i, -7.0, lampCharAState[i], 1);
+	}
+	for (i = 0; i < amountOfLampCharB; i++) {	// Fuel
+		draw7Seg(6.5 + 0.5 * i, -5.0, lampCharBState[i], 0);
+	}
+	for (i = 0; i < amountOfLampCharC; i++) {	//Cash
+		draw7Seg(6.5 + 0.5 * i, -7.0, lampCharCState[i], 2);
 	}
 }
 
@@ -108,7 +134,7 @@ void SegmentDisplay::setLampBState(int lampNum, int setNum) {
 
 
 void SegmentDisplay::setLampTimeState(int lampNum, int setNum) {
-	int tmpState;
+	int tmpState = 0;
 	if (lampNum < amountOfLampTime) {
 		switch (setNum) {
 		case 0:
@@ -146,6 +172,122 @@ void SegmentDisplay::setLampTimeState(int lampNum, int setNum) {
 	}
 }
 
+void SegmentDisplay::setLampCharAState(int lampNum, int setNum) {
+	int tmpState = 0;
+	if (lampNum < amountOfLampCharA) {
+		switch (setNum) {
+		case 0:
+			tmpState = 0b0111111;
+			break;
+		case 1:
+			tmpState = 0b0011000;
+			break;
+		case 2:
+			tmpState = 0b1110110;
+			break;
+		case 3:
+			tmpState = 0b1111100;
+			break;
+		case 4:
+			tmpState = 0b1011001;
+			break;
+		case 5:
+			tmpState = 0b1101101;
+			break;
+		case 6:
+			tmpState = 0b1101111;
+			break;
+		case 7:
+			tmpState = 0b0111000;
+			break;
+		case 8:
+			tmpState = 0b1111111;
+			break;
+		case 9:
+			tmpState = 0b1111101;
+			break;
+		}
+		lampCharAState[lampNum] = tmpState;
+	}
+}
+
+void SegmentDisplay::setLampCharBState(int lampNum, int setNum) {
+	int tmpState = 0;
+	if (lampNum < amountOfLampCharB) {
+		switch (setNum) {
+		case 0:
+			tmpState = 0b0111111;
+			break;
+		case 1:
+			tmpState = 0b0011000;
+			break;
+		case 2:
+			tmpState = 0b1110110;
+			break;
+		case 3:
+			tmpState = 0b1111100;
+			break;
+		case 4:
+			tmpState = 0b1011001;
+			break;
+		case 5:
+			tmpState = 0b1101101;
+			break;
+		case 6:
+			tmpState = 0b1101111;
+			break;
+		case 7:
+			tmpState = 0b0111000;
+			break;
+		case 8:
+			tmpState = 0b1111111;
+			break;
+		case 9:
+			tmpState = 0b1111101;
+			break;
+		}
+		lampCharBState[lampNum] = tmpState;
+	}
+}
+
+void SegmentDisplay::setLampCharCState(int lampNum, int setNum) {
+	int tmpState = 0;
+	if (lampNum < amountOfLampCharC) {
+		switch (setNum) {
+		case 0:
+			tmpState = 0b0111111;
+			break;
+		case 1:
+			tmpState = 0b0011000;
+			break;
+		case 2:
+			tmpState = 0b1110110;
+			break;
+		case 3:
+			tmpState = 0b1111100;
+			break;
+		case 4:
+			tmpState = 0b1011001;
+			break;
+		case 5:
+			tmpState = 0b1101101;
+			break;
+		case 6:
+			tmpState = 0b1101111;
+			break;
+		case 7:
+			tmpState = 0b0111000;
+			break;
+		case 8:
+			tmpState = 0b1111111;
+			break;
+		case 9:
+			tmpState = 0b1111101;
+			break;
+		}
+		lampCharCState[lampNum] = tmpState;
+	}
+}
 
 /*
 @brief 7セグメントディスプレイの描画
@@ -153,7 +295,7 @@ void SegmentDisplay::setLampTimeState(int lampNum, int setNum) {
 @param y y座標
 @param state 7segのランプが描画関数上から順に下位のビットに対応 
 */
-void SegmentDisplay::draw7Seg(double x, double y, int state) {
+void SegmentDisplay::draw7Seg(double x, double y, int state, int color) {
 	double z = -30;
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -161,7 +303,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		//　左上
 		glPushMatrix(); {
 			if ((state & 0b0000001) != 0) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -173,7 +315,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		// 左下
 		glPushMatrix(); {
 			if ((state & 0b0000010) == 0b0000010) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -184,7 +326,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		// 下
 		glPushMatrix(); {
 			if ((state & 0b0000100) == 0b0000100) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -199,7 +341,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		// 右下
 		glPushMatrix(); {
 			if ((state & 0b0001000) == 0b0001000) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -211,7 +353,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		// 右上
 		glPushMatrix(); {
 			if ((state & 0b0010000) == 0b0010000) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -222,7 +364,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		}glPopMatrix();
 		// 上
 		if ((state & 0b0100000) == 0b0100000) {
-			setMatOrange();
+			setMaterial(color);
 		}
 		else {
 			setMatGrey();
@@ -238,7 +380,7 @@ void SegmentDisplay::draw7Seg(double x, double y, int state) {
 		// 中
 		glPushMatrix(); {
 			if ((state & 0b1000000) == 0b1000000) {
-				setMatOrange();
+				setMaterial(color);
 			}
 			else {
 				setMatGrey();
@@ -287,14 +429,66 @@ void SegmentDisplay::setMatOrange() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matasshine);
 }
 
+void SegmentDisplay::setMatGreen(){
+	//グリーン
+	GLfloat matasambi[] = { 0.3,  1.0, 0.1, 1.0 };
+	GLfloat matasdiff[] = { 0.3,  1.0, 0.1, 1.0 };
+	GLfloat matasspec[] = { 0.0,  0.0, 0.0, 1.0 };
+	GLfloat matasshine[] = { 27.89743616 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matasambi); //環境光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matasdiff); //拡散光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matasspec); //鏡面光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matasshine);
+}
+
+void SegmentDisplay::setMatYellow() {
+	//イエロー
+	GLfloat matasambi[] = { 0.9,  0.9, 0.2, 1.0 };
+	GLfloat matasdiff[] = { 0.9,  0.9, 0.2, 1.0 };
+	GLfloat matasspec[] = { 0.0,  0.0, 0.0, 1.0 };
+	GLfloat matasshine[] = { 27.89743616 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matasambi); //環境光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matasdiff); //拡散光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matasspec); //鏡面光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matasshine);
+}
+
+void SegmentDisplay::setMatBlue(){
+	//ブルー
+	GLfloat matasambi[] = { 0.1,  0.8, 1.0, 1.0 };
+	GLfloat matasdiff[] = { 0.1,  0.8, 1.0, 1.0 };
+	GLfloat matasspec[] = { 0.0,  0.0, 0.0, 1.0 };
+	GLfloat matasshine[] = { 27.89743616 };
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matasambi); //環境光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matasdiff); //拡散光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matasspec); //鏡面光の反射率を設定
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matasshine);
+}
+
 void SegmentDisplay::setMatGrey() {
 	//グレー
 	GLfloat matasambi[] = { 0.1, 0.1, 0.1, 1.0 };
-	GLfloat matasdiff[] = { 0.2,  0.2, 0.2, 1.0 };
-	GLfloat matasspec[] = { 0.2,  0.2, 0.2, 1.0 };
+	GLfloat matasdiff[] = { 0.1,  0.1, 0.1, 1.0 };
+	GLfloat matasspec[] = { 0.0,  0.0, 0.0, 1.0 };
 	GLfloat matasshine[] = { 17.89743616 };
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, matasambi); //環境光の反射率を設定
 	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, matasdiff); //拡散光の反射率を設定
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, matasspec); //鏡面光の反射率を設定
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, matasshine);
+}
+
+void SegmentDisplay::setMaterial(int num) {
+	switch (num) {
+	case 0:
+		setMatOrange();
+		break;
+	case 1:
+		setMatGreen();
+		break;
+	case 2:
+		setMatYellow();
+		break;
+	case 3:
+		setMatBlue();
+	}
 }

@@ -12,10 +12,11 @@ Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.
     lightChanged = false;
     inTheWall = false;
     brakeValid = false;
-    fuel = 200;
-    fuelMax = 200;
+    fuel = 100;
+    fuelMax = 100;
     fuelMeter.setFuel(fuel);
     fuelMeter.setFuelMax(fuelMax);
+    money = 250000;
     speedMeter.setMaxSpeed(speedMax);
     speedMeter.setSpeed(speed);
     headLight.setLightNumber(1);
@@ -210,6 +211,8 @@ void Player::update() {
             tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
             if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
                 //衝突
+                money -= 25000 * abs(speed);           // 修理代
+                Sound::getIns()->playSE7();
                 double e = 0.2; //反発係数
                 speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
             }
@@ -227,6 +230,8 @@ void Player::update() {
             tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
             if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
                 //衝突
+                money -= 25000 * abs(speed);           // 修理代
+                Sound::getIns()->playSE7();
                 double e = 0.2; //反発係数
                 speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
             }
@@ -234,7 +239,12 @@ void Player::update() {
             z -= speed * -sin(angleY);
         }
     }
-    if (SystemMain::getIns()->key.getKeyXON() > 0) {
+
+    if (money < 0) {
+        money = 0;
+    }
+
+    if (SystemMain::getIns()->key.getKeyXON() > 0) { // ライト切り替え
         if (!lightChanged) {
             lightSwitch = !lightSwitch;
             lightChanged = true;        //連続で切り替わらないようにする
@@ -249,7 +259,13 @@ void Player::update() {
     }
     fuel -= power; // エンジン切らないと燃料減る あとライトとか
     if (fuel < 0 ) {
-        fuel = 100;
+        if (money > 10000) {
+            money -= 10000;
+            fuel = 50;
+        }
+        else {
+            fuel = 0;
+        }
     }
 
     //y方向の更新
@@ -339,8 +355,8 @@ void Player::update() {
     //タイマー
     timer = glutGet(GLUT_ELAPSED_TIME);
     int second, minute, conma;
-    conma = timer / 10;
-    second = timer / 1000;
+    conma = (timer - timerStart) / 10;
+    second = (timer - timerStart) / 1000;
     minute = second / 60;
     second = second % 60;
     minute = minute % 60;
@@ -351,95 +367,129 @@ void Player::update() {
     segment.setLampTimeState(1, minute % 10);
     segment.setLampTimeState(0, (minute / 10) % 10);
 
+    //フレームレートの計算
+    //static int frameCount;
+    //static double frameTimer = glutGet(GLUT_ELAPSED_TIME);
+    //int i;
+    //frameCount++;
+    //if ((timer - frameTimer) > 1000) {
+    //    frameTimer = glutGet(GLUT_ELAPSED_TIME);
+    //    frameCount = 0;
+    //}
+    //for (i = 0; i < 8; i++) {
+    //    segment.setLampState(7 - i, (int)((frameCount / (timer - frameTimer)) * pow(10, 7 - i)) % 10);
+    //}
+    int i;
 
+    for (i = 0; i < 8; i++) {
+        segment.setLampState(i, (int)(money * pow(10, - (7 - i))) % 10);
+    }
+    if (lapNumber >= 0) {
+        segment.setLampCharAState(5, lapNumber % 10);
+    }
 
     /*
     ここから下はサウンド関連の処理 かなり無理矢理
     再生のたびに動作が停止する
     */
 
-    static int brank = 6831;
-    static int brankSE1 = 2631;
-    static int brankSE4 = 3631;
-    static int brankSE5 = 21631;
-    static bool ValidSE1 = false; //減速
-    static bool ValidSE3 = false; //アイドル
-    static bool ValidSE4 = false; //加速中
-    static bool ValidSE5 = false; //走行中
-    static int tmpSound = 0;
-    static int currentSound = -1;
-    static double timerForSound;
-    
-    segment.setLampBState(0, currentSound);
-    segment.setLampBState(1, tmpSound);
+    bool disableSound = false;
+    if (!disableSound) {
+        static int brank = 6831;
+        static int brankSE1 = 2631;
+        static int brankSE4 = 3631;
+        static int brankSE5 = 21631;
+        static bool ValidSE1 = false; //減速
+        static bool ValidSE3 = false; //アイドル
+        static bool ValidSE4 = false; //加速中
+        static bool ValidSE5 = false; //走行中
+        static int tmpSound = 0;
+        static int currentSound = -1;
+        static double timeForBGM;
+        static double timerForSound;
+        static bool isBGMlooped = false;
 
-    if (currentSound != tmpSound) {
-        //前の音を止める
-        //Sound::getIns()->pauseSE(tmpSound);
-        tmpSound = currentSound;
-        soundChange = true;
-        timerForSound = glutGet(GLUT_ELAPSED_TIME);
-    }
-    else {
-        soundChange = false;
-    }
+        segment.setLampBState(0, currentSound);
+        segment.setLampBState(1, tmpSound);
 
-    if ((currentSound == 1 || currentSound == 2 || currentSound == 4 )&& SystemMain::getIns()->key.getKeyDownON() && speed > 0) { //走行中のブレーキ
-        currentSound = 4;
-        Sound::getIns()->pauseSE4();
-        Sound::getIns()->pauseSE5();
-        if ((timer - timerForSound) - brankSE1 * (int)((timer - timerForSound) / brankSE1) < 1000) {  // 音のループを無理矢理ここでやる
-            if (!ValidSE1) {
-                Sound::getIns()->playSE1();
-                ValidSE1 = true;
+        if ((int)((timer - timerStart) / 1000) % 60 == 0) {
+            if (!isBGMlooped) {
+                Sound::getIns()->playMainBGM();
+                isBGMlooped = true;
             }
         }
         else {
-            ValidSE1 = false;
+            isBGMlooped = false;
         }
-    }
-    else {
-        if (speed > 0.6) {
-            currentSound = 2;
+
+        if (currentSound != tmpSound) {
+            //前の音を止める
+            //Sound::getIns()->pauseSE(tmpSound);
+            tmpSound = currentSound;
+            soundChange = true;
+            timerForSound = glutGet(GLUT_ELAPSED_TIME);
+        }
+        else {
+            soundChange = false;
+        }
+
+        if ((currentSound == 1 || currentSound == 2 || currentSound == 4) && SystemMain::getIns()->key.getKeyDownON() && speed > 0) { //走行中のブレーキ
+            currentSound = 4;
             Sound::getIns()->pauseSE4();
-            Sound::getIns()->pauseSE1();
-            if ((timer - timerForSound) - brankSE5 * (int)((timer - timerForSound) / brankSE5) < 1000) {  // 音のループを無理矢理ここでやる
-                if (!ValidSE5) {
-                    Sound::getIns()->playSE5();
-                    ValidSE5 = true;
-                }
-            }
-            else {
-                ValidSE5 = false;
-            }
-        }
-        else if (speed > 0) {
-            currentSound = 1;
-            Sound::getIns()->pauseSE1();
             Sound::getIns()->pauseSE5();
-            if ((timer - timerForSound) - brankSE4 * (int)((timer - timerForSound) / brankSE4) < 1000) {
-                if (!ValidSE4) {
-                    Sound::getIns()->playSE4();
-                    ValidSE4 = true;
+            if ((timer - timerForSound) - brankSE1 * (int)((timer - timerForSound) / brankSE1) < 1000) {  // 音のループを無理矢理ここでやる
+                if (!ValidSE1) {
+                    Sound::getIns()->playSE1();
+                    ValidSE1 = true;
                 }
             }
             else {
-                ValidSE4 = false;
+                ValidSE1 = false;
             }
         }
         else {
-            currentSound = 0;
-            Sound::getIns()->pauseSE1();
-            Sound::getIns()->pauseSE4();
-            Sound::getIns()->pauseSE5();
-            if ((timer - timerForSound) - brank * (int)((timer - timerForSound) / brank) < 1000) {
-                if (!ValidSE3) {
-                    Sound::getIns()->playSE3();
-                    ValidSE3 = true;
+            if (speed > 0.6) {
+                currentSound = 2;
+                Sound::getIns()->pauseSE4();
+                Sound::getIns()->pauseSE1();
+                if ((timer - timerForSound) - brankSE5 * (int)((timer - timerForSound) / brankSE5) < 1000) {  // 音のループを無理矢理ここでやる
+                    if (!ValidSE5) {
+                        Sound::getIns()->playSE5();
+                        ValidSE5 = true;
+                    }
+                }
+                else {
+                    ValidSE5 = false;
+                }
+            }
+            else if (speed > 0) {
+                currentSound = 1;
+                Sound::getIns()->pauseSE1();
+                Sound::getIns()->pauseSE5();
+                if ((timer - timerForSound) - brankSE4 * (int)((timer - timerForSound) / brankSE4) < 1000) {
+                    if (!ValidSE4) {
+                        Sound::getIns()->playSE4();
+                        ValidSE4 = true;
+                    }
+                }
+                else {
+                    ValidSE4 = false;
                 }
             }
             else {
-                ValidSE3 = false;
+                currentSound = 0;
+                Sound::getIns()->pauseSE1();
+                Sound::getIns()->pauseSE4();
+                Sound::getIns()->pauseSE5();
+                if ((timer - timerForSound) - brank * (int)((timer - timerForSound) / brank) < 1000) {
+                    if (!ValidSE3) {
+                        Sound::getIns()->playSE3();
+                        ValidSE3 = true;
+                    }
+                }
+                else {
+                    ValidSE3 = false;
+                }
             }
         }
     }

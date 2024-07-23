@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="FuelMeter.cpp" />
+    <ClCompile Include="JudgeLap.cpp" />
     <ClCompile Include="MapData.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Define.cpp" />
@@ -154,6 +155,7 @@
   <ItemGroup>
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="FuelMeter.h" />
+    <ClInclude Include="JudgeLap.h" />
     <ClInclude Include="MapData.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Define.h" />

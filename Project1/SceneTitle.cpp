@@ -70,7 +70,7 @@ void SceneTitle::update() {
 		case 0:
 			SystemMain::getIns()->changeScene(1);
 			Sound::getIns()->pauseSub();
-			Sound::getIns()->playMainBGM();
+			SystemMain::getIns()->game.Init();
 			break;
 		case 1:
 			Texture::getIns()->setResolution(1);

@@ -42,38 +42,38 @@ FieldData::FieldData() {
 void FieldData::update() {
     int i, j;
     static int maxVel = 0.04;
-    for (i = 0; i < fieldSizeX; i++) {
-        for (j = 0; j < fieldSizeZ; j++) {
-            randValueVel[i][j][0] += 0.0004 * ((rand() % 11) - 5);
-            randValueVel[i][j][1] += 0.0004 * ((rand() % 11) - 5);
-            randValue[i][j][0] += randValueVel[i][j][0];
-            randValue[i][j][1] += randValueVel[i][j][1];
-            if (randValueVel[i][j][0] > maxVel) {
-                randValueVel[i][j][0] = maxVel;
-            }
-            if (randValueVel[i][j][1] > maxVel) {
-                randValueVel[i][j][1] = maxVel;
-            }
-            if (randValueVel[i][j][0] < -maxVel) {
-                randValueVel[i][j][0] = -maxVel;
-            }
-            if (randValueVel[i][j][1] < -maxVel) {
-                randValueVel[i][j][1] = -maxVel;
-            }
-            if (randValue[i][j][0] > 0.2) {
-                randValue[i][j][0] = 0.2;
-            }
-            if (randValue[i][j][1] > 0.2) {
-                randValue[i][j][1] = 0.2;
-            }
-            if (randValue[i][j][0] < -0.2) {
-                randValue[i][j][0] = -0.2;
-            }
-            if (randValue[i][j][1] < -0.2) {
-                randValue[i][j][1] = -0.2;
-            }
-        }
-    }
+    //for (i = 0; i < fieldSizeX; i++) {
+    //    for (j = 0; j < fieldSizeZ; j++) {
+    //        randValueVel[i][j][0] += 0.0004 * ((rand() % 11) - 5);
+    //        randValueVel[i][j][1] += 0.0004 * ((rand() % 11) - 5);
+    //        randValue[i][j][0] += randValueVel[i][j][0];
+    //        randValue[i][j][1] += randValueVel[i][j][1];
+    //        if (randValueVel[i][j][0] > maxVel) {
+    //            randValueVel[i][j][0] = maxVel;
+    //        }
+    //        if (randValueVel[i][j][1] > maxVel) {
+    //            randValueVel[i][j][1] = maxVel;
+    //        }
+    //        if (randValueVel[i][j][0] < -maxVel) {
+    //            randValueVel[i][j][0] = -maxVel;
+    //        }
+    //        if (randValueVel[i][j][1] < -maxVel) {
+    //            randValueVel[i][j][1] = -maxVel;
+    //        }
+    //        if (randValue[i][j][0] > 0.2) {
+    //            randValue[i][j][0] = 0.2;
+    //        }
+    //        if (randValue[i][j][1] > 0.2) {
+    //            randValue[i][j][1] = 0.2;
+    //        }
+    //        if (randValue[i][j][0] < -0.2) {
+    //            randValue[i][j][0] = -0.2;
+    //        }
+    //        if (randValue[i][j][1] < -0.2) {
+    //            randValue[i][j][1] = -0.2;
+    //        }
+    //    }
+    //}
 }
 
 void FieldData::draw() {
@@ -96,14 +96,14 @@ void FieldData::draw() {
     glScaled(1.0, 1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
     //ƒeƒNƒXƒ`ƒƒ‚Ì’£‚è‘Ö‚¦‚ªd‚¢‚©‚ç2‰ñƒ‹[ƒv‚·‚é
+    const GLfloat* tmpColor = white;
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //‹¾–ÊŒõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
     Texture::getIns()->setTexture(Texture::getIns()->CONCRETE); 
     for (i = 0; i < fieldSizeX; i++) {
         for (j = 0; j < fieldSizeZ; j++) {
-            const GLfloat* tmpColor = white;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //‹¾–ÊŒõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             // •Ç
 
             if (getField(i, j) == 0) {
@@ -121,13 +121,13 @@ void FieldData::draw() {
         }
     }
     Texture::getIns()->setTexture(Texture::getIns()->FLOOR);
+
+    glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //‹¾–ÊŒõ‚Ì”½Ë—¦‚ğİ’è
+    glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
     for (i = 0; i < fieldSizeX; i++) {
         for (j = 0; j < fieldSizeZ; j++) {
-            const GLfloat* tmpColor = white;
-            glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, tmpColor); //ŠÂ‹«Œõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, tmpColor); //ŠgUŒõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, tmpColor); //‹¾–ÊŒõ‚Ì”½Ë—¦‚ğİ’è
-            glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, tmpColor);
             if (getField(i, j) != 0) { // °
                 glPushMatrix(); {
                     glTranslatef((i * gridSize), -gridSize + 3.5, (j * gridSize));

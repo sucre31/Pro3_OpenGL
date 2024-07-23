@@ -16,6 +16,7 @@ public:
 	double getFieldGridSize() const { return FieldGridSize; }
 	void setFieldGridNumber(int num) { fieldGridNumber = num; }
 	int getFieldGridNumber() { return fieldGridNumber; }
+	int getFieldData(int x, int z) { return field.getField(x, z); }
 private:
 	const double FieldGridSize = 7.0;	//1ƒOƒŠƒbƒh‚ ‚½‚è‚Ì‘å‚«‚³
 	int fieldGridNumber;

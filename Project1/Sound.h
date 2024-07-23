@@ -16,6 +16,8 @@ public:
 	void playSE4();
 	void playSE5();
 	void playSE6();
+	void playSE7();
+	void playSE8();
 	void pauseMain();
 	void pauseSub();
 	void pauseSE1();

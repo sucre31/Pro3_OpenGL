@@ -1,0 +1,8 @@
+# wavを無視
+*.wav
+
+# dataを無視
+*.data
+
+# pngを無視
+*.png

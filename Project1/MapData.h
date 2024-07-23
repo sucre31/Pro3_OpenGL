@@ -16,7 +16,7 @@ public:
 private:
 	const double squareSize = 8;
 	double fieldRate;
-	const double posX = 190, posY = 545;
+	const double posX = 187, posY = 545; //補正用
 	int playerX, playerZ;
 	double playerRemainderX, playerRemainderZ;	//グリッドに直すときのあまり
 };

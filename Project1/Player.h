@@ -21,13 +21,17 @@ public:
 	double getX() { return x; }
 	double getY() { return y; }
 	double getZ() { return z; }
+	int getFieldX() { return FieldX; }
+	int getFieldZ() { return FieldZ; }
 	void setX(double xIn) { x = xIn; }
 	void setY(double yIn) { y = yIn; }
 	void setZ(double zIn) { z = zIn; }
 	void setDefX(double xIn) { defX = xIn; }
 	void setDefY(double yIn) { defY = yIn; }
 	void setDefZ(double zIn) { defZ = zIn; }
+	void setLapNumber(int Num) { lapNumber = Num; }
 	bool isFuelRemaining() { return (fuel > 0); };
+	void setTimer() { timerStart = glutGet(GLUT_ELAPSED_TIME); }
 	void setMapSize() { carNavi.setSquareSize((20 / fieldNumber)); }
 	double fieldNumber;	// マップに渡すだけ
 private:
@@ -62,6 +66,9 @@ private:
 	double handleAngleMax;	// ハンドルの最大回転角
 	double bodyAngle;		// 車体の揺れ
 	double fuel, fuelMax;
+	double timerStart;
+	int money;				// 所持金
+	int lapNumber;
 	void drawHandle();
 	bool brakeValid;		// ブレーキ踏んでるかs
 };

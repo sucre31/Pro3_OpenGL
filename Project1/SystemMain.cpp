@@ -10,6 +10,7 @@ SystemMain::SystemMain() {
 void SystemMain::lightInit(void) {
     glEnable(GL_LIGHTING);  //光源の設定を有効にする
     glEnable(GL_LIGHT0);    //0番目の光源を有効にする(8個まで設定可能)
+    //glDisable(GL_LIGHT0);
     glEnable(GL_NORMALIZE); //法線ベクトルの自動正規化を有効
 
     glShadeModel(GL_SMOOTH); //スムーズシェーディングに設定
@@ -72,6 +73,7 @@ void SystemMain::draw() {
 }
 
 void SystemMain::update() {
+
     // シーンの切り替えをここでやってしまう
     switch (SceneNum) {
     case 0:
@@ -96,6 +98,8 @@ void SystemMain::reshapeFunc(int w, int h) // ウインドウサイズ変更時に呼び出され
     gluPerspective(30.0, (double)w / h, 10.0, 100.0); // 透視投影
     winH = h;
     winW = w;
+
+    glutReshapeWindow(Define::WIN_W, Define::WIN_H); //無理矢理サイズを固定する
 }
 
 void SystemMain::view2D() {

@@ -3,10 +3,10 @@
 #include <digitalv.h>
 
 // includeが上手くいかないのでここだけグローバル変数を使用する
-static MCI_OPEN_PARMS mciOpenParam[8];
+static MCI_OPEN_PARMS mciOpenParam[10];
 
 Sound::Sound() {
-	soundCount = 7;
+	soundCount = 9;
 	mciOpenParam[0].lpstrDeviceType
 		= (LPCTSTR)MCI_DEVTYPE_WAVEFORM_AUDIO;  // メディアの種類
 	mciOpenParam[0].lpstrElementName = TEXT("Assets/music/FreeBird.wav");;    // ファイル名
@@ -70,6 +70,22 @@ Sound::Sound() {
 	mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE |
 		MCI_OPEN_TYPE_ID | MCI_OPEN_ELEMENT,
 		(DWORD_PTR)&mciOpenParam[7]);
+
+	mciOpenParam[8].lpstrDeviceType
+		= (LPCTSTR)MCI_DEVTYPE_WAVEFORM_AUDIO;  // メディアの種類
+	mciOpenParam[8].lpstrElementName = TEXT("Assets/music/register.wav");;    // キャッシュレジスタ音
+	// mciデバイスのオープン
+	mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE |
+		MCI_OPEN_TYPE_ID | MCI_OPEN_ELEMENT,
+		(DWORD_PTR)&mciOpenParam[8]);
+
+	mciOpenParam[9].lpstrDeviceType
+		= (LPCTSTR)MCI_DEVTYPE_WAVEFORM_AUDIO;  // メディアの種類
+	mciOpenParam[9].lpstrElementName = TEXT("Assets/music/Lap.wav");;    // キャッシュレジスタ音
+	// mciデバイスのオープン
+	mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_TYPE |
+		MCI_OPEN_TYPE_ID | MCI_OPEN_ELEMENT,
+		(DWORD_PTR)&mciOpenParam[9]);
 }
 
 void Sound::playMainBGM() {
@@ -119,6 +135,18 @@ void Sound::playSE6() {
 	//現在の場所から再生なので，何度も繰り返して鳴らす時は先に巻き戻す
 	mciSendCommand(mciOpenParam[7].wDeviceID, MCI_SEEK, MCI_SEEK_TO_START, 0);
 	mciSendCommand(mciOpenParam[7].wDeviceID, MCI_PLAY, 0, 0);
+}
+
+void Sound::playSE7() {
+	//現在の場所から再生なので，何度も繰り返して鳴らす時は先に巻き戻す
+	mciSendCommand(mciOpenParam[8].wDeviceID, MCI_SEEK, MCI_SEEK_TO_START, 0);
+	mciSendCommand(mciOpenParam[8].wDeviceID, MCI_PLAY, 0, 0);
+}
+
+void Sound::playSE8() {
+	//現在の場所から再生なので，何度も繰り返して鳴らす時は先に巻き戻す
+	mciSendCommand(mciOpenParam[9].wDeviceID, MCI_SEEK, MCI_SEEK_TO_START, 0);
+	mciSendCommand(mciOpenParam[9].wDeviceID, MCI_PLAY, 0, 0);
 }
 
 void Sound::pauseMain() {
