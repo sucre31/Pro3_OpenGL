@@ -13,7 +13,7 @@ void ShiftLever::draw() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 	glPushMatrix(); {
 		glRotatef(15 + shiftAngle, 1.0, 0.0, 0.0);
-		glTranslatef(0.0f, 0.0f, -2.0f);
+		glTranslatef(0.30f, 0.0f, -2.0f);
 		glPushMatrix(); {
 			glTranslatef(1.0f, -2.0f, 1.0f);
 			glScalef(0.1, 0.1, 2.0);

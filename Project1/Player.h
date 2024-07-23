@@ -5,6 +5,9 @@
 #include "Pedal.h"
 #include "MapData.h"
 #include "FuelMeter.h"
+#include "SpeedMeter.h"
+#include "Plate.h"
+#include "SegmentDisplay.h"
 
 class Player
 {
@@ -18,13 +21,19 @@ public:
 	double getX() { return x; }
 	double getY() { return y; }
 	double getZ() { return z; }
+	int getFieldX() { return FieldX; }
+	int getFieldZ() { return FieldZ; }
 	void setX(double xIn) { x = xIn; }
 	void setY(double yIn) { y = yIn; }
 	void setZ(double zIn) { z = zIn; }
 	void setDefX(double xIn) { defX = xIn; }
 	void setDefY(double yIn) { defY = yIn; }
 	void setDefZ(double zIn) { defZ = zIn; }
+	void setLapNumber(int Num) { lapNumber = Num; }
 	bool isFuelRemaining() { return (fuel > 0); };
+	void setTimer() { timerStart = glutGet(GLUT_ELAPSED_TIME); }
+	void setMapSize() { carNavi.setSquareSize((20 / fieldNumber)); }
+	double fieldNumber;	// マップに渡すだけ
 private:
 	ShiftLever shiftLever;
 	HeadLight headLight;
@@ -32,11 +41,17 @@ private:
 	Pedal pedalBrake;
 	MapData carNavi;
 	FuelMeter fuelMeter;
+	SpeedMeter speedMeter;
+	Plate plate;
+	SegmentDisplay segment;
+	double timer;			//経過時間を保持
 	const int HandelRate = 140;		//見かけ上のハンドルの回転速度
 	int shift;				// シフトレバーの状態 0:ドライブ, 1:リバース, 2:ニュートラル
 	int FieldX, FieldZ;		// グリッド座標変換
 	bool lightSwitch;		// ヘッドライトをつけるか
 	bool lightChanged;		// ほんとはキー入力側で対応すべき
+	bool inTheWall; //あとでけす
+	bool soundChange;
 	double power;			// 電力
 	double accel;			// アクセル(加速度)
 	double brake;			// ブレーキ(加速度)
@@ -49,8 +64,12 @@ private:
 	double angleY;			// Y軸の回転量(ラジアン)
 	double handleAngle;		// ハンドルの回転量
 	double handleAngleMax;	// ハンドルの最大回転角
+	double bodyAngle;		// 車体の揺れ
 	double fuel, fuelMax;
+	double timerStart;
+	int money;				// 所持金
+	int lapNumber;
 	void drawHandle();
-	void drawSpeed();
+	bool brakeValid;		// ブレーキ踏んでるかs
 };
 

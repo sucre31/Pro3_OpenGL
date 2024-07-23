@@ -8,6 +8,7 @@ public:
 	bool getKeyRightON() const { return keyRightON; }
 	int getKeyZON() const { return keyZON; }
 	int getKeyXON() const { return keyXON; }
+	int getKeyEscON() const { return keyEscON; }
 	int getX() const { return x; }
 	int getY() const { return y; }
 	void setC(unsigned char c) { this->c = c; }
@@ -25,6 +26,7 @@ private:
 	bool keyLeftON = false;	// 矢印キーの状態フラグ
 	bool keyRightON = false;	// 矢印キーの状態フラグ
 	bool keyZON;	//Zキーの状態フラグ
+	bool keyEscON;	//エスケープキーの
 	int keyXON;	//Xキーの状態フラグ
 };
 

@@ -16,6 +16,7 @@ public:
 	void setTargetX(float CameraX) { x2 = CameraX; }
 	void setTargetY(float CameraY) { y2 = CameraY; }
 	void setTargetZ(float CameraZ) { z2 = CameraZ; }
+	void setLookAt();
 private:
 	float x, y, z;
 	float x2, y2, z2;

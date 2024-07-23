@@ -1,9 +1,11 @@
 #include <glut.h>
 #include "SystemMain.h"
 #include "Define.h"
+#pragma comment(linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"")
 //#define GL_SILENCE_DEPRECATION //MacOS‚Ìê‡‚ÅƒGƒ‰[‚ğ•\¦‚³‚¹‚È‚¢ê‡
 //#include <GLUT/glut.h> //MacOS‚Ìê‡
 //#include <GL/glut.h> //Linux‚Ìê‡
+
 
 int main(int argc, char* argv[])
 {

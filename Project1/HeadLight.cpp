@@ -38,17 +38,17 @@ void HeadLight::draw() {
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, mat0spec); //鏡面光の反射率を設定
 		glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mat0shine);
 		glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
-		glTranslatef(lightPosition[0], lightPosition[1] + 0.5, lightPosition[2]);
-		glutSolidSphere(0.10, 15, 15);              // 球
+		glTranslatef(lightPosition[0], lightPosition[1], lightPosition[2]);
+		//glutSolidSphere(0.10, 15, 15);              // 球
 	}glPopMatrix();
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
 }
 
 void HeadLight::update() {
 	//ライト位置の更新
-	lightPosition[0] = x - 3.0 * -cos(angle - 180 * (M_PI / 180));
-	lightPosition[1] = y + 1.3;
-	lightPosition[2] = z - 3.0 * sin(angle - 180 * (M_PI / 180));
+	lightPosition[0] = x - 18.0 * -cos(angle - 180 * (M_PI / 180));
+	lightPosition[1] = y + 1.3 + 1.2;
+	lightPosition[2] = z - 18.0 * sin(angle - 180 * (M_PI / 180));
 	spotDirrection[0] = 3.0 * -cos(angle - 180 * (M_PI / 180));
 	spotDirrection[1] = -1.0;
 	spotDirrection[2] = 3.0 * sin(angle - 180 * (M_PI / 180));
@@ -66,8 +66,8 @@ void HeadLight::configLight(){
 		glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0);   //光の一定減衰率
 		glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.002);   //光の2次減衰率
 		glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spotDirrection); //スポットライトの向ける方向（デフォルト (0,0,-1.0)）
-		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 21.0);// スポットライトの絞り（デフォルト 180.0）
-		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.01);// スポットライトの中心からの減衰の度合い（デフォルト 0）
+		glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 25.0);// スポットライトの絞り（デフォルト 180.0）
+		glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 0.0000005);// スポットライトの中心からの減衰の度合い（デフォルト 0）
 		break;
 	}
 	if (!lightOn) {

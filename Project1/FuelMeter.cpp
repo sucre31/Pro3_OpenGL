@@ -2,10 +2,12 @@
 #include "FuelMeter.h"
 
 void FuelMeter::draw() {
+    int addX = 15;
+    int addY = -35;
     glColor4f(1.0f, 0.56f, 0.3f, 1.0f);
-    drawQuadrilateral(1060, 600, 200, 40);
+    drawQuadrilateral(1060 + addX, 600 + addY, 200, 40);
     glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-    drawQuadrilateral(1065, 605, 190 * fuel / fuelMax, 30);
+    drawQuadrilateral(1065 + addX, 605 + addY, 190 * fuel / fuelMax, 30);
 }
 
 void FuelMeter::drawQuadrilateral(int x, int y, double sizeX, double sizeY) {

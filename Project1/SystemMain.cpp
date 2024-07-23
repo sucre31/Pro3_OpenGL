@@ -1,19 +1,16 @@
 #include <glut.h>
 #include "SystemMain.h"
 #include "Define.h"
+#include "Texture.h"
 
 SystemMain::SystemMain() {
-    player.setX(field.getFieldGridSize());
-    player.setY(0.0);
-    player.setZ(field.getFieldGridSize());
-    player.setDefX(field.getFieldGridSize());
-    player.setDefY(field.getFieldGridSize());
-    player.setDefZ(field.getFieldGridSize());
+    SceneNum = 0;
 }
 
 void SystemMain::lightInit(void) {
     glEnable(GL_LIGHTING);  //光源の設定を有効にする
     glEnable(GL_LIGHT0);    //0番目の光源を有効にする(8個まで設定可能)
+    //glDisable(GL_LIGHT0);
     glEnable(GL_NORMALIZE); //法線ベクトルの自動正規化を有効
 
     glShadeModel(GL_SMOOTH); //スムーズシェーディングに設定
@@ -22,19 +19,8 @@ void SystemMain::lightInit(void) {
 
 void SystemMain::textureInit(void) {
 
-    static double genfunc[][4] = {   /* テクスチャ生成関数のパラメータ */
-        { 1.0, 0.0, 0.0, 0.0 },
-        { 0.0, 1.0, 0.0, 0.0 },
-    };
-
-    /* 頂点のオブジェクト空間における座標値をテクスチャ座標に使う */
-    glTexGeni(GL_S, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-    glTexGeni(GL_T, GL_TEXTURE_GEN_MODE, GL_OBJECT_LINEAR);
-
-    /* テクスチャ座標生成関数の設定 */
-    glTexGendv(GL_S, GL_OBJECT_PLANE, genfunc[0]);
-    glTexGendv(GL_T, GL_OBJECT_PLANE, genfunc[1]);
-
+    Texture::getIns()->initTexture();
+    Texture::getIns()->setTexture(1);
 }
 
 void SystemMain::display() {
@@ -74,53 +60,30 @@ void SystemMain::draw() {
     glClearColor(0.0, 0.0, 0.0, 1.0); // 画面クリア
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    view2D();                   // 順番に注意 背景用
-    //backGround.draw();
-
-    GLfloat globalAmbient[] = { 0.0, 0.0, 0.0, 1.0 };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbient);
-
-    glViewport(0, winH / 4, winW, winH ); //ビューポートを調整
-    view3D();
-    gluLookAt(camera.getX(), camera.getY(),camera.getZ(), camera.getTargetX(), camera.getTargetY() + 2, camera.getTargetZ(), 0.0, 1.0, 0.0);  // カメラ位置からプレイヤーを見る
-    GLfloat lightPosition[4] = { 0.0, 5.0, 0.0, 1.0 }; //光源の位置
-    GLfloat light_ambient[] = { 0.1, 0.1, 0.1, 1.0f };    //環境光
-    GLfloat  light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };      //拡散光
-    GLfloat  light_specular[] = { 0.81f, 0.81f, 0.81f, 1.0f };     //鏡面光
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0006);   //光の減衰
-    field.draw();
-    player.draw();
-
-    glViewport(0, winH * (3 / 4), winW, winH); //ビューポートを調整
-    view2D();                   // インタフェース用背景
-    info.draw();
-
-    view3D();
-    GLfloat lightPosition2[4] = { 50.0, 100.0, 100.0, 0.0 }; //光源の位置
-    GLfloat light_ambient2[] = { 0.9f, 0.9f, 0.9f, 1.0f };    //環境光
-    GLfloat  light_diffuse2[] = { 0.2f, 0.2f, 0.2f, 1.0f };      //拡散光
-    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition2);
-    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient2);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse2);
-    gluLookAt(0.0, 0.0, -10.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-    player.drawInfo();
-
-    view2D();
-    player.drawInfo2D();
+    switch (SceneNum) {
+    case 0:
+        title.draw();
+        break;
+    case 1:
+        game.draw();
+        break;
+    }
 
     glutSwapBuffers(); // バッファの切り替え
-
-
 }
 
 void SystemMain::update() {
-    //各インスタンスのupdateを実行
-    player.update();
-    field.update();
+
+    // シーンの切り替えをここでやってしまう
+    switch (SceneNum) {
+    case 0:
+        title.update();
+        break;
+    case 1:
+        game.update();
+        break;
+    }
+    
     //描画依頼
     glutPostRedisplay();
     //次タイマー登録
@@ -132,9 +95,11 @@ void SystemMain::reshapeFunc(int w, int h) // ウインドウサイズ変更時に呼び出され
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(30.0, (double)w / h, 1.0, 100.0); // 透視投影
+    gluPerspective(30.0, (double)w / h, 10.0, 100.0); // 透視投影
     winH = h;
     winW = w;
+
+    glutReshapeWindow(Define::WIN_W, Define::WIN_H); //無理矢理サイズを固定する
 }
 
 void SystemMain::view2D() {
@@ -151,11 +116,22 @@ void SystemMain::view3D() {
     glEnable(GL_LIGHTING); // ライティングを有効化
     glMatrixMode(GL_PROJECTION);// 射影変換行列設定
     glLoadIdentity();
+    gluPerspective(30.0, (double)winW / winH, 8.5, 1000.0); // 透視投影
+    glMatrixMode(GL_MODELVIEW);// モデルビュー変換行列設定
+    glLoadIdentity();// 単位行列を設定
+    glEnable(GL_DEPTH_TEST); // 隠面消去を有効
+}
+
+void SystemMain::view3DForUI() {
+    glEnable(GL_LIGHTING); // ライティングを有効化
+    glMatrixMode(GL_PROJECTION);// 射影変換行列設定
+    glLoadIdentity();
     gluPerspective(30.0, (double)winW / winH, 1.0, 1000.0); // 透視投影
     glMatrixMode(GL_MODELVIEW);// モデルビュー変換行列設定
     glLoadIdentity();// 単位行列を設定
     glEnable(GL_DEPTH_TEST); // 隠面消去を有効
 }
+
 
 void SystemMain::keyboardCall(unsigned char key, int x, int y) {
     this->key.keyboard(key, x, y);
@@ -171,4 +147,8 @@ void SystemMain::keyCall(int key, int x, int y) {
 
 void SystemMain::keyCallUp(int key, int x, int y) {
     this->key.specialKeyUp(key, x, y);
+}
+
+void SystemMain::changeScene(int Num) {
+    SceneNum = Num;
 }
