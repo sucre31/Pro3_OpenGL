@@ -15,11 +15,11 @@ Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.
     lightChanged = false;
     inTheWall = false;
     brakeValid = false;
-    fuel = 100;
-    fuelMax = 100;
+    fuel = 500;
+    fuelMax = 500;
     fuelMeter.setFuel(fuel);
     fuelMeter.setFuelMax(fuelMax);
-    money = 250000;
+    money = 200000;
     speedMeter.setMaxSpeed(speedMax);
     speedMeter.setSpeed(speed);
     headLight.setLightNumber(1);
@@ -250,14 +250,14 @@ void Player::update() {
             tmpCrushB = tmpCrushB || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX4, tmpGridZ4) == 0);
             if (tmpCrushA) {
                 //Õ“Ë
-                money -= 25000 * abs(speed);           // C—‘ã
+                money -= 12500 * abs(speed);           // C—‘ã
                 Sound::getIns()->playSE7();
                 double e = 0.2; //”½”­ŒW”
                 speed = -speed * e - 0.1;      //Z“§ˆ³‚Å”²‚¯‚ê‚é‚ñ‚¾‚¯‚Ç
             }
             if (tmpCrushB) {
                 //Õ“Ë
-                money -= 25000 * abs(speed);           // C—‘ã
+                money -= 12500 * abs(speed);           // C—‘ã
                 Sound::getIns()->playSE7();
                 double e = 0.2; //”½”­ŒW”
                 speed = speed * e + 0.1;      //Z“§ˆ³‚Å”²‚¯‚ê‚é‚ñ‚¾‚¯‚Ç
@@ -301,14 +301,14 @@ void Player::update() {
             tmpCrushA = tmpCrushA || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX4, tmpGridZ4) == 0);
             if (tmpCrushA) {
                 //Õ“Ë
-                money -= 25000 * abs(speed);           // C—‘ã
+                money -= 12500 * abs(speed);           // C—‘ã
                 Sound::getIns()->playSE7();
                 double e = 0.2; //”½”­ŒW”
                 speed = -speed * e - 0.1;      //Z“§ˆ³‚Å”²‚¯‚ê‚é‚ñ‚¾‚¯‚Ç
             }
             else if (tmpCrushB) {
                 //Õ“Ë
-                money -= 25000 * abs(speed);           // C—‘ã
+                money -= 12500 * abs(speed);           // C—‘ã
                 Sound::getIns()->playSE7();
                 double e = 0.2; //”½”­ŒW”
                 speed = speed * e + 0.1;      //Z“§ˆ³‚Å”²‚¯‚ê‚é‚ñ‚¾‚¯‚Ç
@@ -345,13 +345,7 @@ void Player::update() {
     }
     fuel -= power; // ƒGƒ“ƒWƒ“Ø‚ç‚È‚¢‚Æ”R—¿Œ¸‚é ‚ ‚Æƒ‰ƒCƒg‚Æ‚©
     if (fuel < 0 ) {
-        if (money > 10000) {
-            money -= 10000;
-            fuel = 50;
-        }
-        else {
-            fuel = 0;
-        }
+        fuel = 0;
     }
 
     //y•ûŒü‚ÌXV

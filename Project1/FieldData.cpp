@@ -87,7 +87,7 @@ void FieldData::draw() {
     GLfloat mat0ambi[] = { 0.59225,  0.19225, 0.19225, 1.0 };//銀
     GLfloat mat0diff[] = { 0.60754,  0.50754, 0.50754, 1.0 };
     GLfloat mat0spec[] = { 0.608273,  0.508273, 0.508273, 1.0 };
-    GLfloat mat0emis[] = { 0.19225,  0.19225, 0.19225, 1.0 };//銀
+    GLfloat mat0emis[] = { 0.39225,  0.39225, 0.39225, 1.0 };//銀
     GLfloat mat0shine[] = { 51.2 };
     /*それぞれの盤面の状態を受け取り描画*/
     glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
@@ -112,12 +112,19 @@ void FieldData::draw() {
                     plate.drawBox(gridSize / 2.0, 3 * gridSize / 2, gridSize/ 2.0);             // 壁
                 }glPopMatrix();
             }
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
+            if (getField(i, j) == 9) {
+                glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, mat0emis);
+                glPushMatrix();
+                glTranslatef((i * gridSize), 2 * gridSize + 0.0, (j * gridSize));
+                glScaled(1.0, 0.2, 0.1);
+                glutSolidCube(3.0);             // 天井ライト
+                glPopMatrix();
+                glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
+            }
             glPushMatrix(); {
                 glTranslatef((i * gridSize), 2 * gridSize + 3.5, (j * gridSize));
                 plate.drawBox(gridSize / 2.0, gridSize / 2.0, gridSize / 2.0);             // 天井
             }glPopMatrix();
-            glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, matZero);
         }
     }
     Texture::getIns()->setTexture(Texture::getIns()->FLOOR);
