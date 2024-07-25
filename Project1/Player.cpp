@@ -8,6 +8,9 @@
 #include "Sound.h"
 
 Player::Player() : x(0.0), y(0.5), z(0.0),velY(0.0), angleY(-M_PI / 2), speed(0.0), speedMax(2.0), accel(0.01), brake(0.02), handling(0.2 * M_PI / 360), handleAngle(0.0), handleAngleMax(8 * M_PI / 360) {
+    carLengthX = 3.0; 
+    carLengthX2 = 2.5;
+    carLengthZ = 3.5;
     lightSwitch = true;
     lightChanged = false;
     inTheWall = false;
@@ -50,7 +53,7 @@ void Player::draw() {
         glPushMatrix(); {//モデルはコストが高いのでテクスチャで代用
             glEnable(GL_TEXTURE_2D); // テクスチャマッピング開始
             glEnable(GL_ALPHA_TEST);
-            glTranslated(0.0, 1.5, 6.0);
+            glTranslated(0.0, 1.5, 1.0);
             glRotatef(-90, 0.0, 0.0, 1.0);  //Z軸まわりに-90°回転
             glScaled(2.0, 2.0, 0.1);
             if (brakeValid) {
@@ -66,6 +69,25 @@ void Player::draw() {
             glDisable(GL_TEXTURE_2D); // テクスチャマッピング終了
             glDisable(GL_ALPHA_TEST);
         }glPopMatrix();
+    }glPopMatrix();
+
+    glPushMatrix(); { //  衝突判定
+        //glPushMatrix(); {
+        //    glTranslatef(collisionX1, 2.0, collisionZ1); //位置変数をもとに移動
+        //    glutSolidSphere(0.1, 10, 10);
+        //}glPopMatrix();
+        //glPushMatrix(); {
+        //    glTranslatef(collisionX2, 2.0, collisionZ2); //位置変数をもとに移動
+        //    glutSolidSphere(0.1, 10, 10);
+        //}glPopMatrix();
+        //glPushMatrix(); {
+        //    glTranslatef(collisionX3, 2.0, collisionZ3); //位置変数をもとに移動
+        //    glutSolidSphere(0.1, 10, 10);
+        //}glPopMatrix();
+        //glPushMatrix(); {
+        //    glTranslatef(collisionX4, 2.0, collisionZ4); //位置変数をもとに移動
+        //    glutSolidSphere(0.1, 10, 10);
+        //}glPopMatrix();
     }glPopMatrix();
 
     headLight.draw();
@@ -203,40 +225,104 @@ void Player::update() {
         if (shift == 0) {
             angleY += speed * handleAngle;
             //衝突をここで判定
-            double tmpX, tmpZ;
-            int tmpGridX, tmpGridZ;
-            tmpX = x + speed * cos(angleY);
-            tmpZ = z + speed * -sin(angleY);
-            tmpGridX = SystemMain::getIns()->game.field.getFieldX(tmpX);
-            tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
-            if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
+            double tmpX1, tmpX2, tmpX3, tmpX4, tmpZ1, tmpZ2, tmpZ3, tmpZ4;
+            int tmpGridX1, tmpGridX2, tmpGridX3, tmpGridX4, tmpGridZ1, tmpGridZ2, tmpGridZ3, tmpGridZ4;
+            bool tmpCrushA = false, tmpCrushB = false;  //衝突判定
+            tmpX1 = x + speed * cos(angleY) + (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標1
+            tmpX2 = x + speed * cos(angleY) - (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標2
+            tmpX3 = x + speed * cos(angleY) + (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            tmpX4 = x + speed * cos(angleY) - (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);        // 衝突チェック用のX座標2
+            tmpZ1 = z + speed * -sin(angleY) + (carLengthX / 2) * cos(angleY);                                  // 衝突チェック用のZ座標1
+            tmpZ2 = z + speed * -sin(angleY) - (carLengthX / 2) * cos(angleY);                                       // 衝突チェック用のZ座標2
+            tmpZ3 = z + speed * -sin(angleY) + (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            tmpZ4 = z + speed * -sin(angleY) - (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            tmpGridX1 = SystemMain::getIns()->game.field.getFieldX(tmpX1);
+            tmpGridX2 = SystemMain::getIns()->game.field.getFieldX(tmpX2);
+            tmpGridX3 = SystemMain::getIns()->game.field.getFieldX(tmpX3);
+            tmpGridX4 = SystemMain::getIns()->game.field.getFieldX(tmpX4);
+            tmpGridZ1 = SystemMain::getIns()->game.field.getFieldX(tmpZ1);
+            tmpGridZ2 = SystemMain::getIns()->game.field.getFieldX(tmpZ2);
+            tmpGridZ3 = SystemMain::getIns()->game.field.getFieldX(tmpZ3);
+            tmpGridZ4 = SystemMain::getIns()->game.field.getFieldX(tmpZ4);
+            tmpCrushA = (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX1, tmpGridZ1) == 0);
+            tmpCrushA = tmpCrushA || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX2, tmpGridZ2) == 0);
+            tmpCrushB =  (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX3, tmpGridZ3) == 0);
+            tmpCrushB = tmpCrushB || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX4, tmpGridZ4) == 0);
+            if (tmpCrushA) {
                 //衝突
                 money -= 25000 * abs(speed);           // 修理代
                 Sound::getIns()->playSE7();
                 double e = 0.2; //反発係数
-                speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
+                speed = -speed * e - 0.1;      //浸透圧で抜けれるんだけど
+            }
+            if (tmpCrushB) {
+                //衝突
+                money -= 25000 * abs(speed);           // 修理代
+                Sound::getIns()->playSE7();
+                double e = 0.2; //反発係数
+                speed = speed * e + 0.1;      //浸透圧で抜けれるんだけど
             }
             x += speed * cos(angleY);
             z += speed * -sin(angleY);
+            collisionX1 = x + speed * cos(angleY) + (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標1
+            collisionX2 = x + speed * cos(angleY) - (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標2
+            collisionX3 = x + speed * cos(angleY) + (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            collisionX4 = x + speed * cos(angleY) - (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            collisionZ1 = z + speed * -sin(angleY) + (carLengthX / 2) * cos(angleY);                                      // 衝突チェック用のZ座標1
+            collisionZ2 = z + speed * -sin(angleY) - (carLengthX / 2) * cos(angleY);                                       // 衝突チェック用のZ座標2
+            collisionZ3 = z + speed * -sin(angleY) + (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            collisionZ4 = z + speed * -sin(angleY) - (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
         } 
         else if (shift == 1){
             angleY -= speed * handleAngle;
             //衝突をここで判定
-            double tmpX, tmpZ;
-            int tmpGridX, tmpGridZ;
-            tmpX = x + speed * cos(angleY);
-            tmpZ = z + speed * -sin(angleY);
-            tmpGridX = SystemMain::getIns()->game.field.getFieldX(tmpX);
-            tmpGridZ = SystemMain::getIns()->game.field.getFieldX(tmpZ);
-            if (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX, tmpGridZ) == 0) {
+            double tmpX1, tmpX2, tmpX3, tmpX4, tmpZ1, tmpZ2, tmpZ3, tmpZ4;
+            int tmpGridX1, tmpGridX2, tmpGridX3, tmpGridX4, tmpGridZ1, tmpGridZ2, tmpGridZ3, tmpGridZ4;
+            bool tmpCrushA = false, tmpCrushB = false;  //衝突判定
+            tmpX1 = x + speed * cos(angleY) + (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標1
+            tmpX2 = x + speed * cos(angleY) - (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標2
+            tmpX3 = x + speed * cos(angleY) + (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            tmpX4 = x + speed * cos(angleY) - (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);        // 衝突チェック用のX座標2
+            tmpZ1 = z + speed * -sin(angleY) + (carLengthX / 2) * cos(angleY);                                  // 衝突チェック用のZ座標1
+            tmpZ2 = z + speed * -sin(angleY) - (carLengthX / 2) * cos(angleY);                                       // 衝突チェック用のZ座標2
+            tmpZ3 = z + speed * -sin(angleY) + (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            tmpZ4 = z + speed * -sin(angleY) - (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            tmpGridX1 = SystemMain::getIns()->game.field.getFieldX(tmpX1);
+            tmpGridX2 = SystemMain::getIns()->game.field.getFieldX(tmpX2);
+            tmpGridX3 = SystemMain::getIns()->game.field.getFieldX(tmpX3);
+            tmpGridX4 = SystemMain::getIns()->game.field.getFieldX(tmpX4);
+            tmpGridZ1 = SystemMain::getIns()->game.field.getFieldX(tmpZ1);
+            tmpGridZ2 = SystemMain::getIns()->game.field.getFieldX(tmpZ2);
+            tmpGridZ3 = SystemMain::getIns()->game.field.getFieldX(tmpZ3);
+            tmpGridZ4 = SystemMain::getIns()->game.field.getFieldX(tmpZ4);
+            tmpCrushB = (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX1, tmpGridZ1) == 0);
+            tmpCrushB = tmpCrushB || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX2, tmpGridZ2) == 0);
+            tmpCrushA = (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX3, tmpGridZ3) == 0);
+            tmpCrushA = tmpCrushA || (SystemMain::getIns()->game.field.checkFieldValue(tmpGridX4, tmpGridZ4) == 0);
+            if (tmpCrushA) {
                 //衝突
                 money -= 25000 * abs(speed);           // 修理代
                 Sound::getIns()->playSE7();
                 double e = 0.2; //反発係数
-                speed = -speed * e - 0.2;      //浸透圧で抜けれるんだけど
+                speed = -speed * e - 0.1;      //浸透圧で抜けれるんだけど
+            }
+            else if (tmpCrushB) {
+                //衝突
+                money -= 25000 * abs(speed);           // 修理代
+                Sound::getIns()->playSE7();
+                double e = 0.2; //反発係数
+                speed = speed * e + 0.1;      //浸透圧で抜けれるんだけど
             }
             x -= speed * cos(angleY);
             z -= speed * -sin(angleY);
+            collisionX1 = x + speed * cos(angleY) + (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標1
+            collisionX2 = x + speed * cos(angleY) - (carLengthX / 2) * sin(angleY);       // 衝突チェック用のX座標2
+            collisionX3 = x + speed * cos(angleY) + (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            collisionX4 = x + speed * cos(angleY) - (carLengthX2 / 2) * sin(angleY) - carLengthZ * sin(angleY + M_PI / 2);       // 衝突チェック用のX座標2
+            collisionZ1 = z + speed * -sin(angleY) + (carLengthX / 2) * cos(angleY);                                      // 衝突チェック用のZ座標1
+            collisionZ2 = z + speed * -sin(angleY) - (carLengthX / 2) * cos(angleY);                                       // 衝突チェック用のZ座標2
+            collisionZ3 = z + speed * -sin(angleY) + (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
+            collisionZ4 = z + speed * -sin(angleY) - (carLengthX2 / 2) * cos(angleY) - carLengthZ * cos(angleY + M_PI / 2);                                       // 衝突チェック用のZ座標2
         }
     }
 
@@ -316,9 +402,12 @@ void Player::update() {
     FieldZ = SystemMain::getIns()->game.field.getFieldZ(z);
 
     //カメラ位置の更新
-    SystemMain::getIns()->game.camera.setX(x - 17 * cos(angleY));
+    SystemMain::getIns()->game.camera.setX(x - 12 * cos(angleY));
     SystemMain::getIns()->game.camera.setY(y + 3.5);
-    SystemMain::getIns()->game.camera.setZ(z + 17 * sin(angleY));
+    SystemMain::getIns()->game.camera.setZ(z + 12 * sin(angleY));
+    //SystemMain::getIns()->game.camera.setX(x - 22 * cos(angleY));
+    //SystemMain::getIns()->game.camera.setY(y + 8.5);
+    //SystemMain::getIns()->game.camera.setZ(z + 22 * sin(angleY));
     SystemMain::getIns()->game.camera.setTargetX(x - 10 * cos(angleY + M_PI));
     SystemMain::getIns()->game.camera.setTargetY(1.0);
     SystemMain::getIns()->game.camera.setTargetZ(z + 10 * sin(angleY + M_PI));
