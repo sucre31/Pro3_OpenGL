@@ -59,6 +59,8 @@ private:
 	double speedMax;		// 最大速度
 	double handling;		// ハンドル回転スピード
 	double x, y, z;			// 位置
+	double collisionX1, collisionX2, collisionX3, collisionX4;
+	double collisionZ1, collisionZ2, collisionZ3, collisionZ4;
 	double defX, defY, defZ;// 初期位置
 	double velY;			// Y方向の速度
 	double angleY;			// Y軸の回転量(ラジアン)
@@ -67,9 +69,11 @@ private:
 	double bodyAngle;		// 車体の揺れ
 	double fuel, fuelMax;
 	double timerStart;
+	double carLengthX;		// 車の幅
+	double carLengthX2;		// 車の幅
+	double carLengthZ;		// 車の長さ
 	int money;				// 所持金
 	int lapNumber;
 	void drawHandle();
 	bool brakeValid;		// ブレーキ踏んでるかs
 };
-
